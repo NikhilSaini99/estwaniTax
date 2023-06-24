@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Provider } from 'react-redux'
 import { store } from "@/state/store"
 
+
 export default function App({ Component, pageProps }) {
   const theme = createTheme({
     typography: {

@@ -30,9 +30,16 @@ const Signup = () => {
     })
 
     const onsubmit = (data) => {
-        dispatch(signupData(data));
-        console.log(data)
-        console.log(signUpFormValue)
+
+        if (data.password === data.rePassword) {
+            dispatch(signupData(data));
+            console.log(data)
+            console.log(signUpFormValue)
+        }
+        else {
+            alert("Password didn't Match")
+        }
+
     }
 
     const formParentStyling = {
@@ -66,6 +73,7 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='businessName'
+                        rules={{ required: 'BusinessName is required' }}
                         render={({ field }) =>
                             <CustomTextField
                                 inputType='text' fieldLabel='Enter BusinessName' field={field} errorDetail='businessName'
@@ -76,9 +84,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='address'
+                        rules={{ required: 'Address is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter Address' field={field} errorDetail='businessName'
+                                inputType='text' fieldLabel='Enter Address' field={field} errorDetail='address'
                                 errors={errors}
                             />}
                     >
@@ -86,9 +95,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='tin'
+                        rules={{ required: 'Tin is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Tin' field={field} errorDetail='businessName'
+                                inputType='number' fieldLabel='Enter Tin' field={field} errorDetail='tin'
                                 errors={errors}
                             />}
                     >
@@ -96,9 +106,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='primaryContact'
+                        rules={{ required: 'PrimaryContact is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter Full Name' field={field} errorDetail='businessName'
+                                inputType='text' fieldLabel='Enter Full Name' field={field} errorDetail='primaryContact'
                                 errors={errors}
                             />}
                     >
@@ -106,9 +117,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='designation'
+                        rules={{ required: 'Designation is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter Designation' field={field} errorDetail='businessName'
+                                inputType='text' fieldLabel='Enter Designation' field={field} errorDetail='designation'
                                 errors={errors}
                             />}
                     >
@@ -116,9 +128,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='teleNo'
+                        rules={{ required: 'TeleNo is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Telephone Number' field={field} errorDetail='businessName'
+                                inputType='number' fieldLabel='Enter Telephone Number' field={field} errorDetail='teleNo'
                                 errors={errors}
                             />}
                     >
@@ -126,9 +139,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='cellNo'
+                        rules={{ required: 'CellNo is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Celephone Number' field={field} errorDetail='businessName'
+                                inputType='number' fieldLabel='Enter Celephone Number' field={field} errorDetail='cellNo'
                                 errors={errors}
                             />}
                     >
@@ -136,9 +150,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='email'
+                        rules={{ required: 'Email is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='email' fieldLabel='Enter Email' field={field} errorDetail='businessName'
+                                inputType='email' fieldLabel='Enter Email' field={field} errorDetail='email'
                                 errors={errors}
                             />}
                     >
@@ -146,9 +161,10 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='password'
+                        rules={{ required: 'Password is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='password' fieldLabel='Enter Password' field={field} errorDetail='businessName'
+                                inputType='password' fieldLabel='Enter Password' field={field} errorDetail='password'
                                 errors={errors}
                             />}
                     >
@@ -156,9 +172,11 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='rePassword'
+                        rules={{ required: 'Password is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='password' fieldLabel='Re-Type-Password' field={field} errorDetail='businessName'
+                            name="repassword"
+                                inputType='password' fieldLabel='Re-Type-Password' field={field} errorDetail='rePassword'
                                 errors={errors}
                             />}
                     >

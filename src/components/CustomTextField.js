@@ -10,7 +10,7 @@ const CustomTextField = ({ inputType, fieldLabel, field, errorDetail, errors }) 
         }}
             InputProps={{
                 style: {
-                    background:'white'
+                    background: 'white'
                 }
             }}
             sx={{ borderRadius: '5px', }}
