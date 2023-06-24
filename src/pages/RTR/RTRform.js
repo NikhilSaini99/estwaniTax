@@ -43,7 +43,7 @@ const RTRform = () => {
     dispatch(rtrData({ ...data, dateFrom: from, dateTo: to }));
   }
   const formParentStyling = {
-    width: { xs: '98%', md: '98%', lg: '80%' },
+    width: { xs: '98%', md: '98%', lg: '95%' },
     margin: '0 auto',
     p: { xs: '0.5rem', lg: '2rem' },
     borderRadius: '20px',
@@ -135,7 +135,8 @@ const RTRform = () => {
                       <TableCell>Sales(-) (Qty)</TableCell>
                       <TableCell>Rate</TableCell>
                       <TableCell>Levy(E)</TableCell>
-                      <TableCell>Closing Stock(OP + P – S) (Qty)</TableCell>
+                      <TableCell>Closing Stock
+                      <br></br>(OP + P – S) (Qty)</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
