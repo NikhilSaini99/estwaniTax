@@ -10,6 +10,7 @@ import bgImg from "../../../public/assets/background3.jpg"
 import Link from 'next/link'
 import axios from 'axios'
 import Navbar from '@/components/Navbar'
+import { useFetch } from '@/constants/useFetch'
 
 
 export const bgImgStyling = {
@@ -19,6 +20,8 @@ export const bgImgStyling = {
 }
 
 const LoginForm = () => {
+    const { data: loginData, fetchAPI } = useFetch('post', '/user/login')
+
     const dispatch = useDispatch()
     const loginFormValue = useSelector((state) => state.loginForm)
     const [userList, setUserList] = useState([])
@@ -27,7 +30,7 @@ const LoginForm = () => {
         handleSubmit,
         formState: { errors } } = useForm({
             defaultValues: {
-                email: "",
+                email_id: "",
                 password: "",
             },
         })
@@ -37,29 +40,36 @@ const LoginForm = () => {
         // console.log('watcghin',watchData)
         dispatch(updateLoginState(watchData))
 
+        gettingLogin(watchData);
     }
 
-    useEffect(() => {
-        async function checking() {
-            if (JSON.stringify(loginFormValue) === "{}") {
-                return
-            }
-            // console.log(loginFormValue)
 
-            const check = await axios({
-                method: 'get',
-                url: `${process.env.NEXT_PUBLIC_API_URL}/admin/user_list`
-            })
-                .then((res) => {
-                    console.log(res.data)
-                    return res.data.result.list
-                })
+    const gettingLogin = (watchData) => {
+        console.log(watchData);
+        fetchAPI(watchData);
+        loginData !== null ? console.log(loginData) : console.log("data not found")
+    }
+    // useEffect(() => {
+    //     async function checking() {
+    //         if (JSON.stringify(loginFormValue) === "{}") {
+    //             return
+    //         }
+    //         // console.log(loginFormValue)
 
-            setUserList(check)
-        }
-        checking();
+    //         const check = await axios({
+    //             method: 'get',
+    //             url: `${process.env.NEXT_PUBLIC_API_URL}/admin/user_list`
+    //         })
+    //             .then((res) => {
+    //                 console.log(res.data)
+    //                 return res.data.result.list
+    //             })
 
-    }, [loginFormValue])
+    //         setUserList(check)
+    //     }
+    //     checking();
+
+    // }, [loginFormValue])
 
     const formParentStyling = {
         width: { xs: '98%', lg: '30%' },
@@ -80,9 +90,9 @@ const LoginForm = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
 
-        <Navbar/>
-            <Box sx={{ ...bgImgStyling }}>
-            </Box>
+            <Navbar />
+            {/* <Box sx={{ ...bgImgStyling }}>
+            </Box> */}
             {userList.length >= 1 && console.log(userList)}
             <Box sx={{ ...formParentStyling }}>
                 <Box className='flex flex-col gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full'
@@ -95,11 +105,11 @@ const LoginForm = () => {
                     </Box>
                     <Controller
                         control={control}
-                        name="email"
+                        name="email_id"
 
                         rules={{ required: 'Email is required' }}
                         render={({ field }) => <CustomTextField field={field} inputType='email'
-                            fieldLabel='Enter Email' errorDetail='email' errors={errors}
+                            fieldLabel='Enter Email' errorDetail='email_id' errors={errors}
                         />}>
                     </Controller>
 

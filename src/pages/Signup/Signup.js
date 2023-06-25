@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
 import { signupData } from '@/features/SignupSlice'
@@ -8,39 +8,72 @@ import CustomTextField from '@/components/CustomTextField'
 import { bgImgStyling } from '../Login/LoginForm'
 import CustomButton from '@/components/Button'
 import Navbar from '@/components/Navbar'
+import { useFetch } from '@/constants/useFetch'
+import omit from 'lodash/omit';
+
 
 
 
 const Signup = () => {
+    const [passwordError, setPasswordError] = useState(false);
+    const { data: registerData, error, errorMessage, fetchAPI } = useFetch('post', '/user/ragister')
+
+    const [errorSet, setError] = useState(false);
     const dispatch = useDispatch()
     const signUpFormValue = useSelector((state) => state.SignupForm);
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
         defaultValues: {
-            businessName: signUpFormValue.businessName,
+            name_of_business: signUpFormValue.name_of_business,
             address: signUpFormValue.address,
             tin: signUpFormValue.tin,
-            primaryContact: signUpFormValue.primaryContact,
+            first_name: signUpFormValue.first_name,
+            last_name: 'Test',
             designation: signUpFormValue.designation,
-            teleNo: signUpFormValue.teleNo,
-            cellNo: signUpFormValue.cellNo,
-            email: signUpFormValue.email,
+            telephone_number: signUpFormValue.telephone_number,
+            cell_phone_number: signUpFormValue.cell_phone_number,
+            email_id: signUpFormValue.email_id,
             password: signUpFormValue.password,
-            rePassword: signUpFormValue.rePassword,
+            rePassword: '',
+            user_type: 2
         }
     })
 
+    const password = watch('password');
+    const rePassword = watch('rePassword');
+
     const onsubmit = (data) => {
-
-        if (data.password === data.rePassword) {
-            dispatch(signupData(data));
-            console.log(data)
-            console.log(signUpFormValue)
+        if (password !== rePassword) {
+            // alert("Passwords do not match. Please try again.")
+            setPasswordError(true);
+            return
         }
-        else {
-            alert("Password didn't Match")
+        setPasswordError(false);
+        //removing repassword field and making a new copy without it usingLodash lib
+
+        const newData = omit(data, 'rePassword');
+        dispatch(signupData(newData)); //Dispatching data to store 
+
+        resgitserUser(newData)
+        if (error) {
+            alert(errorMessage)
+            setError(false)
+            return
         }
 
+        // reset()
+    }
+
+    useEffect(() => {
+        if (error) {
+            alert(errorMessage)
+            return
+        }
+    }, [errorMessage, error]);
+
+    function resgitserUser(data) {
+        //calling API with the form field
+        fetchAPI(data);
     }
 
     const formParentStyling = {
@@ -52,7 +85,6 @@ const Signup = () => {
         top: '0',
         minHeight: { xs: '100vh', lg: '800px' }
     }
-
     return (
         <>
             <Head>
@@ -61,9 +93,9 @@ const Signup = () => {
                 <link rel="icon" href="/favicon.png" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-            <Navbar/>
-            <Box sx={{ ...bgImgStyling }}>
-            </Box>
+            <Navbar />
+            {/* <Box sx={{ ...bgImgStyling }}>
+            </Box> */}
 
             <Box sx={{ ...formParentStyling }}>
                 <Box className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full'
@@ -73,11 +105,11 @@ const Signup = () => {
                     </Typography>
                     <Controller
                         control={control}
-                        name='businessName'
+                        name='name_of_business'
                         rules={{ required: 'BusinessName is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter BusinessName' field={field} errorDetail='businessName'
+                                inputType='text' fieldLabel='Enter BusinessName' field={field} errorDetail='name_of_business'
                                 errors={errors}
                             />}
                     >
@@ -106,11 +138,11 @@ const Signup = () => {
                     </Controller>
                     <Controller
                         control={control}
-                        name='primaryContact'
+                        name='first_name'
                         rules={{ required: 'PrimaryContact is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter Full Name' field={field} errorDetail='primaryContact'
+                                inputType='text' fieldLabel='Enter Full Name' field={field} errorDetail='first_name'
                                 errors={errors}
                             />}
                     >
@@ -128,33 +160,33 @@ const Signup = () => {
                     </Controller>
                     <Controller
                         control={control}
-                        name='teleNo'
+                        name='telephone_number'
                         rules={{ required: 'TeleNo is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Telephone Number' field={field} errorDetail='teleNo'
+                                inputType='number' fieldLabel='Enter Telephone Number' field={field} errorDetail='telephone_number'
                                 errors={errors}
                             />}
                     >
                     </Controller>
                     <Controller
                         control={control}
-                        name='cellNo'
+                        name='cell_phone_number'
                         rules={{ required: 'CellNo is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Celephone Number' field={field} errorDetail='cellNo'
+                                inputType='number' fieldLabel='Enter Celephone Number' field={field} errorDetail='cell_phone_number'
                                 errors={errors}
                             />}
                     >
                     </Controller>
                     <Controller
                         control={control}
-                        name='email'
+                        name='email_id'
                         rules={{ required: 'Email is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='email' fieldLabel='Enter Email' field={field} errorDetail='email'
+                                inputType='email' fieldLabel='Enter Email' field={field} errorDetail='email_id'
                                 errors={errors}
                             />}
                     >
@@ -175,11 +207,18 @@ const Signup = () => {
                         name='rePassword'
                         rules={{ required: 'Password is required' }}
                         render={({ field }) =>
-                            <CustomTextField
-                            name="repassword"
-                                inputType='password' fieldLabel='Re-Type-Password' field={field} errorDetail='rePassword'
-                                errors={errors}
-                            />}
+                        (
+                            <>
+                                <CustomTextField
+                                    name="repassword"
+                                    inputType='password' fieldLabel='Re-Type-Password' field={field} errorDetail='rePassword'
+                                    errors={errors}
+                                />
+                                {passwordError && <label style={{ color: 'red' }}
+                                >Passwords do not match. Please try again.</label>}
+                            </>
+                        )
+                        }
                     >
                     </Controller>
                     <Box className="col-span-full flex justify-center">

@@ -21,6 +21,14 @@ html{
 
 body {
    color: rgb(var(--foreground-rgb));
+   background: url('../../public/assets/bg.jpg');
+   background-size: cover;
+   position: absolute;
+   left:0;
+   right:0;
+   top:80px;
+   bottom:0;
+
   /* background: linear-gradient(
       to bottom,
       transparent,

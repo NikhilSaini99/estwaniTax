@@ -1,60 +1,62 @@
 import { useCallback, useReducer } from 'react'
-import axios from 'axios'
-const baseURl = process.env.NEXT_PUBLIC_API_URL
+import fetching from './fetching'
 
 function reducerFunc(state, action) {
     if (action.type === "success") {
-        // console.log(action.data.data)
+
         return {
-            ...state, data: action.data.data
+            ...state, data: action.data,
+            error: false
+        }
+    }
+    else if (action.type === "existing") {
+        // alert(action.errorMessage)
+        return {
+            ...state,
+            error:true,
+            errorMessage: action.errorMessage
+        }
+    }
+    else if (action.type === "error") {
+        return {
+            ...state,
+            error: action.error,
+
         }
     }
 }
 
 export const useFetch = (method, path) => {
 
-    const [state, dispatch] = useReducer(reducerFunc, { data: null })
+    const [state, dispatch] = useReducer(reducerFunc, { data: null, error: null, errorMessage: '' })
 
-    const fetchAPI = useCallback(async (databody) => {
-        try {
-            if (method === 'post') {
-                const response = await axios({
-                    method: method,
-                    url: `${baseURl}${url}`,
-                    data: databody
-                })
+    const fetchAPI = useCallback((databody) => {
 
-               
-                dispatch({ type: 'success', data: response })
+        fetching(method, path, databody).then((response) => {
 
+            // console.log(response.response.data.result.mes)
+            if (response.response.status === 402) {
+                dispatch({ type: 'existing', errorMessage: response.response.data.result.mes })
+            }else{
+                dispatch({ type: 'success', data: response.data })
             }
-            else if (method === "get") {
-                const response = await axios({
-                    method: method,
-                    url: `${baseURl}${path}`,
-                })
-                dispatch({ type: 'success', data: response })
-            }
-        } catch (err) {
-            return err
-        }
+            
+        }).catch((e) => {
+            dispatch({ type: 'error', err: e });
+        });
+
+
+
 
     }, [method, path])
 
 
-        // const fetchAPI = async() =>{
-        //         const userList = await axios({
-        //             method:method,
-        //             url:path
-        //         }).then((res)=>{
-        //             console.log(res.data)
-        //         })
-                
-        // }
-
-        // fetchAPI();
-
-    return {data:state.data , fetchAPI}
+    return {
+        data: state.data,
+        error: state.error,
+        errorMessage: state.errorMessage,
+        fetchAPI
+    }
 }
 
 

@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    businessName: '',
+    name_of_business: '',
     address: '',
     tin: '',
-    primaryContact: '',
+    first_name: '',
+    last_name:'',
     designation: '',
-    teleNo: '',
-    cellNo: '',
-    email: '',
+    telephone_number: '',
+    cell_phone_number: '',
+    email_id: '',
     password: '',
-    rePassword: '',
+    // rePassword: '',
+    user_type:2
 }
 
 

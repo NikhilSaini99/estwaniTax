@@ -76,8 +76,8 @@ const RTRform = () => {
       <Navbar />
       {/* <Box sx={{ background: `url(${bg.src})`, backgroundSize: 'cover',mt:'5rem' }}>
       </Box> */}
-      <Box sx={{ ...bgImgStyling }}>
-      </Box>
+      {/* <Box sx={{ ...bgImgStyling }}>
+      </Box> */}
       <Box sx={{ ...formParentStyling}}>
         <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl mt-24'
           onSubmit={handleSubmit(onsubmit)}>
