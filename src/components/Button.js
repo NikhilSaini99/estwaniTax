@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import React from 'react'
 
-const CustomButton = ({ bgColor, textColor, text,type }) => {
+const CustomButton = ({ bgColor, textColor, text,type,btnDisable,handleClick }) => {
     const btnStyling = {
         backgroundColor: `${bgColor} !important`,
         color: '#FEFEFE',
@@ -11,7 +11,8 @@ const CustomButton = ({ bgColor, textColor, text,type }) => {
     }
 
     return (
-        <Button  type={type} variant='contained' sx={{ ...btnStyling }}>{text}</Button>
+        <Button  type={type} variant='contained' sx={{ ...btnStyling }}
+        disabled={btnDisable}  onClick={handleClick} >{text}</Button>
     )
 }
 

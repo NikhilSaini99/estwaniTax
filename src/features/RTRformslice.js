@@ -7,10 +7,12 @@ export const rtrSlice = (createSlice({
     initialState,
     reducers: {
         rtrData: (state, action) => {
-             return state = action.payload
+            state = action.payload
+            console.log('checking satate in ',state)
+            return state;
         }
     }
 }))
 
-export const {rtrData} = rtrSlice.actions
+export const { rtrData } = rtrSlice.actions
 export default rtrSlice.reducer;

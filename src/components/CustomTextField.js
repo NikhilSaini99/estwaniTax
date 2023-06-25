@@ -15,6 +15,7 @@ const CustomTextField = ({ inputType, fieldLabel, field, errorDetail, errors }) 
             }}
             sx={{ borderRadius: '5px', }}
             variant='outlined'
+            autoComplete="on"
             type={inputType} label={fieldLabel} error={!!errors[errorDetail]} helperText={errors[errorDetail]?.message}
             {...field} />
     )

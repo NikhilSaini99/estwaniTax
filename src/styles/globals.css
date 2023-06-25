@@ -28,3 +28,15 @@ body {
     )
     rgb(var(--background-start-rgb)); */
 }
+
+ul>li,a{
+  list-style-type : none !important;
+  color:black;
+  text-decoration: none;
+}
+ul>li,a:hover{
+  color:#DE3163;
+  transition: color 0.4s;
+}
+
+

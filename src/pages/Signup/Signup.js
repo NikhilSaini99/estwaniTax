@@ -7,6 +7,7 @@ import Head from 'next/head'
 import CustomTextField from '@/components/CustomTextField'
 import { bgImgStyling } from '../Login/LoginForm'
 import CustomButton from '@/components/Button'
+import Navbar from '@/components/Navbar'
 
 
 
@@ -60,7 +61,7 @@ const Signup = () => {
                 <link rel="icon" href="/favicon.png" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-
+            <Navbar/>
             <Box sx={{ ...bgImgStyling }}>
             </Box>
 

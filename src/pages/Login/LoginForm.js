@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateLoginState } from "@/features/formSlice"
@@ -8,33 +8,58 @@ import { Box, Typography } from '@mui/material'
 import Head from 'next/head'
 import bgImg from "../../../public/assets/background3.jpg"
 import Link from 'next/link'
+import axios from 'axios'
+import Navbar from '@/components/Navbar'
 
 
-export const bgImgStyling={
+export const bgImgStyling = {
     background: `url(${bgImg.src})`,
-     zIndex: '-1',
+    zIndex: '-1',
     backgroundSize: 'cover', position: 'absolute', width: '100%', height: '100%'
 }
 
 const LoginForm = () => {
     const dispatch = useDispatch()
     const loginFormValue = useSelector((state) => state.loginForm)
+    const [userList, setUserList] = useState([])
 
-    const { register, control,
+    const { register, control, watch,
         handleSubmit,
         formState: { errors } } = useForm({
             defaultValues: {
-                email: loginFormValue.email,
-                password: loginFormValue.password,
+                email: "",
+                password: "",
             },
         })
 
-    const onSubmit = (data) => {
-        dispatch(updateLoginState(data))
-        console.log(data)
-        console.log('inside new estwani', loginFormValue);
+    const onSubmit = () => {
+        const watchData = watch()
+        // console.log('watcghin',watchData)
+        dispatch(updateLoginState(watchData))
+
     }
-    
+
+    useEffect(() => {
+        async function checking() {
+            if (JSON.stringify(loginFormValue) === "{}") {
+                return
+            }
+            // console.log(loginFormValue)
+
+            const check = await axios({
+                method: 'get',
+                url: `${process.env.NEXT_PUBLIC_API_URL}/admin/user_list`
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    return res.data.result.list
+                })
+
+            setUserList(check)
+        }
+        checking();
+
+    }, [loginFormValue])
 
     const formParentStyling = {
         width: { xs: '98%', lg: '30%' },
@@ -55,23 +80,23 @@ const LoginForm = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
 
-         
-            <Box sx={{...bgImgStyling}}>
-                </Box>
-
+        <Navbar/>
+            <Box sx={{ ...bgImgStyling }}>
+            </Box>
+            {userList.length >= 1 && console.log(userList)}
             <Box sx={{ ...formParentStyling }}>
                 <Box className='flex flex-col gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full'
-                component='form' onSubmit={handleSubmit(onSubmit)}
-                 >
+                    component='form' onSubmit={handleSubmit(onSubmit)}
+                >
                     <Box sx={{ marginBottom: '2rem' }}>
-                        <Typography variant='h1' sx={{ fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' },color:'#2C306F' }}>
+                        <Typography variant='h1' sx={{ fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
                             Get Started Now
                         </Typography>
                     </Box>
                     <Controller
                         control={control}
                         name="email"
-                      
+
                         rules={{ required: 'Email is required' }}
                         render={({ field }) => <CustomTextField field={field} inputType='email'
                             fieldLabel='Enter Email' errorDetail='email' errors={errors}
@@ -90,7 +115,7 @@ const LoginForm = () => {
                         <CustomButton type='submit' text='Login In' bgColor='#2C306F' />
                     </Box>
                     <Box className="flex justify-center">
-                    <Link href='/Signup/Signup'><CustomButton text="New User?" bgColor='#2C306F'/></Link>
+                        <Link href='/Signup/Signup'><CustomButton text="New User?" bgColor='#2C306F' /></Link>
                     </Box>
                 </Box>
             </Box>

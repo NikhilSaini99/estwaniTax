@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState  = { email: "", password: "" }
+const initialState  = {  }
 
 const loginformSlice = createSlice({
     name: 'form',
