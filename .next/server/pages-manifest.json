@@ -1,0 +1,14 @@
+{
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/Admin/RTRDetails/[userDetailsId]": "pages/Admin/RTRDetails/[userDetailsId].html",
+  "/Admin/ShopList": "pages/Admin/ShopList.html",
+  "/Login/LoginForm": "pages/Login/LoginForm.html",
+  "/RTR/RTRform": "pages/RTR/RTRform.html",
+  "/Signup/Signup": "pages/Signup/Signup.html",
+  "/api/hello": "pages/api/hello.js",
+  "/": "pages/index.html",
+  "/_error": "pages/_error.js",
+  "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
+  "/404": "pages/404.html"
+}
