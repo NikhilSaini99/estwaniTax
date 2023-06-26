@@ -5,20 +5,22 @@ import Signup from './Signup/Signup'
 import RTRform from './RTR/RTRform'
 import ShopList from '@/pages/Admin/ShopList'
 import Navbar from '@/components/Navbar'
-
+import PageRoutes
+  from '@/Routes'
 const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
- 
+
   return (
-  <>
- <Navbar/>
- <LoginForm/>
- {/*  
-     <Signup/>
-    <RTRform/>
-   <ShopList/> */}
-  </>
-   
-    
+    <>
+      <LoginForm />
+      {/* <Navbar/>
+         <PageRoutes/>
+        <Signup/>
+        <RTRform/>
+      <ShopList/>
+  */}
+
+    </>
+
   )
 }

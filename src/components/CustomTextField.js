@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material'
 import React from 'react'
 
-const CustomTextField = ({ inputType, fieldLabel, field, errorDetail, errors }) => {
+const CustomTextField = ({ inputType, fieldLabel, field, errorDetail, errors,disabled }) => {
     return (
         <TextField fullWidth InputLabelProps={{
             style: {
@@ -17,6 +17,7 @@ const CustomTextField = ({ inputType, fieldLabel, field, errorDetail, errors }) 
             variant='outlined'
             autoComplete="on"
             type={inputType} label={fieldLabel} error={!!errors[errorDetail]} helperText={errors[errorDetail]?.message}
+            disabled={disabled}
             {...field} />
     )
 }

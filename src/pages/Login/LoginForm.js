@@ -30,24 +30,26 @@ const LoginForm = () => {
         handleSubmit,
         formState: { errors } } = useForm({
             defaultValues: {
-                email_id: "",
                 password: "",
+                email_id: "",
             },
         })
-
+       
     const onSubmit = () => {
         const watchData = watch()
-        // console.log('watcghin',watchData)
+        console.log('watcghin',watchData)
         dispatch(updateLoginState(watchData))
-
         gettingLogin(watchData);
     }
 
+    useEffect(() => {
+        // console.log(loginData)
+    }, [loginData])
 
     const gettingLogin = (watchData) => {
-        console.log(watchData);
+        // console.log(watchData);
         fetchAPI(watchData);
-        loginData !== null ? console.log(loginData) : console.log("data not found")
+
     }
     // useEffect(() => {
     //     async function checking() {

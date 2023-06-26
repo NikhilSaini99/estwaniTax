@@ -5,14 +5,20 @@ import { useMediaQuery } from '@mui/material';
 import { useFetch } from '@/constants/useFetch';
 import CustomButton from '@/components/Button';
 import Navbar from '@/components/Navbar';
+import Link from 'next/link';
+import Router, { useRouter } from 'next/router';
+import { useDispatch,useSelector } from 'react-redux';
+import { existingData } from '@/features/RTRformslice';
+
 
 
 
 const ShopList = () => {
+    const router = useRouter()
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [userList, setUserList] = useState([])
-
+    const dispatch = useDispatch()
     const { data: check, fetchAPI } = useFetch('get', '/rtr/list');
 
     useEffect(() => {
@@ -20,16 +26,28 @@ const ShopList = () => {
     }, [fetchAPI])
 
     useEffect(() => {
-
         if (check !== null) {
-            setUserList(check.result.list);
+            setUserList(check.result.list)
         }
-    }, [fetchAPI, check])
+    }, [fetchAPI, check,dispatch])
 
+    function sendProps(item) {
+       Router.push({
+        pathname: `/Admin/RTRDetails/${item.rtr_id}`,
+        query:{
+            item:item.rtr_id
+        }
+       })
+    }
+
+
+
+
+    
     return (
         <>
             <Navbar />
-            <Paper elevation={20} sx={{width:'98%', margin: '8rem auto 0 auto', overflowX: 'auto' }}>
+            <Paper elevation={20} sx={{ width: '98%', margin: '8rem auto 0 auto', overflowX: 'auto' }}>
                 <Stack spacing={4} direction='column'>
                     <Typography variant='h1' sx={{ width: '95%', margin: '0 auto', fontSize: '3rem', color: '#2C306F', }}>Shop RTR List</Typography>
                     <TableContainer>
@@ -66,7 +84,11 @@ const ShopList = () => {
                                         <TableCell>{item.admin_comments}</TableCell>
                                         <TableCell>
 
-                                            <CustomButton text="Details" bgColor="#2e7d32" handleClick={() => { console.log('hello') }} />
+                                            {/* <CustomButton text="Details" bgColor="#2e7d32" handleClick={() => { console.log(item) }} /> */}
+                                            {/* <Button variant='contained' sx={{ background: "#2e7d32 !important" }} component='a' onClick={()=>sendProps(item)}>Details</Button> */}
+                                            {/* <Button variant='contained' sx={{ background: "#2e7d32 !important" }} component='a' onClick={()=>router.push('/Admin/RTRDetails/Rtr')}>Details</Button> */}
+                                            <Link href={{pathname:`/Admin/RTRDetails/${item.rtr_id}`}}><Button variant='contained' sx={{background:"#2e7d32 !important"}}
+                                            onClick={()=>{dispatch(existingData(item))}}>Details</Button></Link>
 
                                         </TableCell>
                                     </TableRow>

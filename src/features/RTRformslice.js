@@ -10,9 +10,13 @@ export const rtrSlice = (createSlice({
             state = action.payload
             console.log('checking satate in ',state)
             return state;
+        },
+        existingData: (state,action)=>{
+            
+                return state= action.payload
         }
     }
 }))
 
-export const { rtrData } = rtrSlice.actions
+export const { rtrData,existingData } = rtrSlice.actions
 export default rtrSlice.reducer;
