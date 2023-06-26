@@ -36,18 +36,18 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   }
   return (
-    <Paper elevation={20} sx={{ zIndex: '999', position: "fixed", top: '0', backgroundColor: 'transparent', }}>
+    <Paper elevation={20} sx={{ zIndex: '999', position: "relative", top: '0', backgroundColor: 'transparent', }}>
       <Stack
         py={1.5}
         sx={{
           width:"100%",
-          position: "fixed", top: '0',
+          position: "relative", top: '0',
           flexDirection: { xs: "row", sm: "row", md: "row" },
           ...(navColor ? {
-            backgroundColor:'#C0EEE4',
+            backgroundColor:'#1f892a',
             transition: "background-color 0.5s ease",
           } : {
-            backgroundColor:'transparent ',
+            backgroundColor:'#1f892aC5   ',
             transition: 'background-color 0.8s ease-out',
           }),
           display: "flex",
@@ -82,7 +82,6 @@ const Navbar = () => {
               borderRadius: "50%",
             }}
           /></Link>
-          <Typography variant="h1" sx={{ fontWeight: "bold",fontSize:'1rem'}}>Estwani Plastic Tax</Typography>
         </Box>
          
         </Box>
@@ -90,7 +89,7 @@ const Navbar = () => {
         <Box fontWeight="bold">
           <ul className={styles.check}>
             <Link href={'/RTR/RTRform'}>RTR Form</Link>
-            <Link href={'/Admin/ShopList'}>Shop List</Link>
+            <Link href={'/Admin/ShopList'}>RTR List</Link>
           </ul>
           <Button sx={{ display: "none", color: 'black' }}
             onClick={handleHamburger}
@@ -123,7 +122,7 @@ const Navbar = () => {
           <Box fontWeight="bold">
             <ul>
             <Link href={'/RTR/RTRform'}>RTR Form</Link>
-            <Link href={'/Admin/ShopList'}>Shop List</Link>
+            <Link href={'/Admin/ShopList'}>RTR List</Link>
             </ul>
 
             <IconButton

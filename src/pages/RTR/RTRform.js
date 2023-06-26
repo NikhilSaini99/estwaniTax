@@ -78,8 +78,8 @@ const RTRform = () => {
       </Box> */}
       {/* <Box sx={{ ...bgImgStyling }}>
       </Box> */}
-      <Box sx={{ ...formParentStyling}}>
-        <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl mt-24'
+      <Box sx={{ ...formParentStyling }}>
+        <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl my-12'
           onSubmit={handleSubmit(onsubmit)}>
           <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
             Plastic Levy Return!
@@ -89,7 +89,7 @@ const RTRform = () => {
               control={control}
               name="dateFrom"
               rules={{ required: 'Date is required' }}
-              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined', helperText: 'MM/DD/YYYY', } }}
+              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined',} }}
                 // onChange={(date) => setfromDate(date.toISOString())}
                 {...field} />}
             >
@@ -99,7 +99,7 @@ const RTRform = () => {
               control={control}
               name="dateTo"
               rules={{ required: 'Date is required' }}
-              render={({ field }) => <DatePicker label="To" slotProps={{ textField: { variant: 'outlined', helperText: 'MM/DD/YYYY', } }}
+              render={({ field }) => <DatePicker label="To" slotProps={{ textField: { variant: 'outlined', } }}
                 // onChange={(date) => settoDate(date.toISOString())}
                 {...field} />}
             >
@@ -178,10 +178,10 @@ const RTRform = () => {
                       <TextField type="number" value='0.35' disabled />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <TextField type="number" disabled/>
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <TextField type="number" disabled/>
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -199,10 +199,10 @@ const RTRform = () => {
                       <TextField type="number" value='0.20' disabled />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <TextField type="number" disabled/>
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <TextField type="number" disabled/>
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -220,23 +220,21 @@ const RTRform = () => {
                       <TextField type="number" value='0.35' disabled />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <TextField type="number" disabled/>
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      TOTAL LEVY PAYABLE
+                      <TextField type="number" disabled/>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
-            <Box className="col-span-full flex justify-center">
-              <CustomButton text="Calculate" bgColor='#2C306F' />
+            <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
+              <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
+              <CustomButton text="Calculate" bgColor='#1f892a' />
             </Box>
+          
+           
           </Box>
 
           <Controller
@@ -267,7 +265,7 @@ const RTRform = () => {
           </FormGroup>
 
           <Box className="col-span-full flex justify-center">
-            <CustomButton text='Submit' bgColor='#2C306F' type='submit'
+            <CustomButton text='Submit' bgColor='#1f892a' type='submit'
               btnDisable={!handleCheck}
             />
           </Box>

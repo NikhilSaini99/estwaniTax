@@ -74,14 +74,13 @@ const LoginForm = () => {
     // }, [loginFormValue])
 
     const formParentStyling = {
-        width: { xs: '98%', lg: '30%' },
+        width: { xs: '98%', lg: '40%' },
         margin: '0 auto',
         p: { xs: '0.5rem', lg: '2rem' },
         borderRadius: '20px',
         position: 'relative',
         top: '0',
-        minHeight: { xs: '100vh', lg: '50rem' }
-    }
+        }
 
     return (
         <>
@@ -96,8 +95,8 @@ const LoginForm = () => {
             {/* <Box sx={{ ...bgImgStyling }}>
             </Box> */}
             {userList.length >= 1 && console.log(userList)}
-            <Box sx={{ ...formParentStyling }}>
-                <Box className='flex flex-col gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full'
+                <Box sx={{ ...formParentStyling }}>
+                <Box className='flex flex-col gap-4 bg-white shadow-2xl p-4 rounded-xl  w-full sm:w-3/4 lg:w-full'
                     component='form' onSubmit={handleSubmit(onSubmit)}
                 >
                     <Box sx={{ marginBottom: '2rem' }}>
@@ -109,8 +108,8 @@ const LoginForm = () => {
                         control={control}
                         name="email_id"
 
-                        rules={{ required: 'Email is required' }}
-                        render={({ field }) => <CustomTextField field={field} inputType='email'
+                        // rules={{ required: 'Email is required' }}
+                        render={({ field }) => <CustomTextField field={field} inputType='text'
                             fieldLabel='Enter Email' errorDetail='email_id' errors={errors}
                         />}>
                     </Controller>
@@ -124,11 +123,11 @@ const LoginForm = () => {
                         />}>
                     </Controller>
                     <Box className="flex justify-center">
-                        <CustomButton type='submit' text='Login In' bgColor='#2C306F' />
+                        <CustomButton type='submit' text='Login In' bgColor='#1f892a' />
                     </Box>
-                    <Box className="flex justify-center">
+                    {/* <Box className="flex justify-center">
                         <Link href='/Signup/Signup'><CustomButton text="New User?" bgColor='#2C306F' /></Link>
-                    </Box>
+                    </Box> */}
                 </Box>
             </Box>
         </>

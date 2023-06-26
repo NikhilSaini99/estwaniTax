@@ -39,15 +39,11 @@ const ShopList = () => {
         }
        })
     }
-
-
-
-
     
     return (
         <>
             <Navbar />
-            <Paper elevation={20} sx={{ width: '98%', margin: '8rem auto 0 auto', overflowX: 'auto' }}>
+            <Paper elevation={20} sx={{ width: '98%', mx:'auto', my:'5rem', overflowX: 'auto' }}>
                 <Stack spacing={4} direction='column'>
                     <Typography variant='h1' sx={{ width: '95%', margin: '0 auto', fontSize: '3rem', color: '#2C306F', }}>Shop RTR List</Typography>
                     <TableContainer>
