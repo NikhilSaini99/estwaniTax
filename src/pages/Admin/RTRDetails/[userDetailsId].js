@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { Paper, Box, Table, TableBody, ButtonGroup, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Stack, Typography, Checkbox, FormGroup, FormControlLabel } from '@mui/material';
+import { Paper, Box, Table, TableBody, Dialog, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Slide, DialogTitle, Button, Stack } from '@mui/material';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { useTheme } from '@mui/material/styles';
@@ -12,16 +12,25 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import CustomButton from '@/components/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { useFetch } from '@/constants/useFetch';
 
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const UserDetails = () => {
+    const RTRformData = useSelector((state) => state.rtrForm);
+    const { data: formdata, fetchAPI } = useFetch('put', `rtr/update_rtr_status/${RTRformData.rtr_id}`)
+    const [openAccept, setOpenAccept] = useState(false);
+    const [openReject, setOpenReject] = useState(false);
     const router = useRouter()
     const userDetails = router.query;
+    const formRef = useRef(null);
 
-
-    const RTRformData = useSelector((state) => state.rtrForm);
 
     const { handleSubmit, control, watch, formState: { errors } } = useForm({
+        
         defaultValues: {
             dateFrom: dayjs(RTRformData.from_date),
             dateTo: dayjs(RTRformData.to),
@@ -30,12 +39,19 @@ const UserDetails = () => {
             email: RTRformData.email_id,
             cellPhone: RTRformData.cell_phone_number,
             designation: RTRformData.designation,
-            fullName: RTRformData.first_name
+            fullName: RTRformData.first_name,
+            admin_comments: RTRformData.admin_comments||"",
+            approval_status: 2,
         }
     })
 
     const onsubmit = (data) => {
         const watchedData = watch();
+        console.log('hello')
+        fetchAPI({
+            ...RTRformData, admin_comments: data.admin_comments,
+            approval_status: data.approval_status
+        })
     }
 
 
@@ -52,11 +68,32 @@ const UserDetails = () => {
         }
     }
 
+    const btnsStyling = {
+        width: '10rem', p: '1rem',
+        background: '#1F892A'
+    }
+
+    //Comment Opener
+    const handleClickOpenAccept = () => {
+        setOpenAccept(true);
+    };
+    const handleClickOpenReject = () => {
+        setOpenReject(true);
+    };
+
+    const sendCommentandClose = () => {
+        setOpenAccept(false);
+    };
+    const sendCommentandClose2 = () => {
+        setOpenReject(false);
+    };
+   
+
 
 
     return (
         <>
-            {RTRformData && console.log(RTRformData)}
+            {/* {RTRformData && console.log(RTRformData)} */}
             <Navbar />
             <Box sx={{ ...formParentStyling }}>
                 <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl mt-24'
@@ -98,7 +135,7 @@ const UserDetails = () => {
                         control={control}
                         name="tin"
                         rules={{ required: 'TIN is required' }}
-                        render={({ field }) => <CustomTextField field={field} inputType='number'
+                        render={({ field }) => <CustomTextField field={field} inputType='text'
                             fieldLabel='TIN' errorDetail='tin' errors={errors} disabled={true}
                         />}
                     />
@@ -231,17 +268,59 @@ const UserDetails = () => {
                     />
 
 
-                    <Box className="col-span-full flex justify-center">
-                        <CustomButton text='Accept' bgColor='green' type='submit'
+                    <Box className="col-span-full gap-4 flex justify-center"  >
+                        <CustomButton text='Accept' bgColor='green' handleClick={handleClickOpenAccept}
                         //   btnDisable={!handleCheck}
                         />
-                    </Box>
-                    <Box className="col-span-full flex justify-center">
-                        <CustomButton text='Reject' bgColor='red' type='submit'
+                        <CustomButton text='Reject' bgColor='red' handleClick={handleClickOpenReject}
                         //   btnDisable={!handleCheck}
                         />
+                        
                     </Box>
 
+                    <Dialog
+                        open={openAccept}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={sendCommentandClose}
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <Typography variant='h4' sx={{ fontSize: '1.2rem', background: '#1F892A', p: '2rem', color: 'white', textAlign: 'center' }}>Are you Sure you want to Accept the form?</Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', width: '550px', p: '2rem', gap: '2rem', alignItems: 'center' }}>
+
+                            <Controller control={control}
+                                name="admin_comments"
+                                render={({ field }) => <TextField multiline={true} fullWidth inputProps={{ style: { height: '150px' } }} {...field} />}>
+                            </Controller>
+
+                            <Stack spacing={2} direction='row' justifyContent='flex-end'>
+                                <Button onClick={sendCommentandClose} variant='contained' sx={btnsStyling}>Cancel</Button>
+                                <Button onClick={sendCommentandClose} variant='contained' sx={btnsStyling}>Add Comment</Button>
+                            </Stack>
+                        </Box>
+
+                    </Dialog>
+                    <Dialog
+                        open={openReject}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={sendCommentandClose2}
+                        aria-describedby="alert-dialog-slide-description"
+                        
+                    >
+                        <Typography variant='h4' sx={{ fontSize: '1.2rem', background: '#ff0000', p: '2rem', color: 'white', textAlign: 'center' }}>Are you Sure you want to Reject the form?</Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', width: '550px', p: '2rem', gap: '2rem', alignItems: 'center' }}>
+                            <Controller control={control}
+                                name="admin_comments"
+                                render={({ field }) => <TextField multiline={true} fullWidth inputProps={{ style: { height: '150px' } }} {...field} />}>
+                            </Controller>
+                            <Stack spacing={2} direction='row' justifyContent='flex-end'>
+                                <Button onClick={sendCommentandClose2} type="submit" variant='contained' sx={{ ...btnsStyling, background: '#ff0000' }}>Cancel</Button>
+                                <Button onClick={sendCommentandClose2} type="submit" variant='contained' sx={{ ...btnsStyling, background: '#ff0000' }}>Add Comment</Button>
+                            </Stack>
+                        </Box>
+
+                    </Dialog>
                 </Box>
             </Box>
 

@@ -88,8 +88,8 @@ const Navbar = () => {
 
         <Box fontWeight="bold">
           <ul className={styles.check}>
-            <Link href={'/RTR/RTRform'}>RTR Form</Link>
-            <Link href={'/Admin/ShopList'}>RTR List</Link>
+            <Link href={'/RTR/RTRform'}>User RTR Form</Link>
+            <Link href={'/Signup/Signup'}>Registration Form</Link>
           </ul>
           <Button sx={{ display: "none", color: 'black' }}
             onClick={handleHamburger}
@@ -121,8 +121,7 @@ const Navbar = () => {
 
           <Box fontWeight="bold">
             <ul>
-            <Link href={'/RTR/RTRform'}>RTR Form</Link>
-            <Link href={'/Admin/ShopList'}>RTR List</Link>
+            <Link href={'/RTR/RTRform'}>User RTR Form</Link>
             </ul>
 
             <IconButton

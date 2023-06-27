@@ -3,15 +3,26 @@ import loginReducer from "@/features/formSlice"
 import SignupReducer from "@/features/SignupSlice"
 import RTRReducer from "@/features/RTRformslice"
 import storage from 'redux-persist/lib/storage';
-import { persistReducer, persistStore } from 'redux-persist';
-import thunk from 'redux-thunk';
+import thunk from "redux-thunk";
+import {
+    persistReducer, persistStore,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from 'redux-persist';
+
+
 
 
 const persistConfig = {
     key: 'root',
+    version: 1,
     storage,
-}
 
+}
 
 const reducer = combineReducers({
     loginForm: loginReducer,
@@ -22,7 +33,13 @@ const reducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, reducer)
 
 export const store = configureStore({
-    reducer: persistedReducer
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 })
 
 

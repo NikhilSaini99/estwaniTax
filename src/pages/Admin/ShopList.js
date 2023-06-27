@@ -9,18 +9,17 @@ import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useDispatch,useSelector } from 'react-redux';
 import { existingData } from '@/features/RTRformslice';
+import { useSession ,getSession} from 'next-auth/react';
 
-
-
-
-const ShopList = () => {
+const ShopList = ({}) => {
+    const {data:session} = useSession()
     const router = useRouter()
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [userList, setUserList] = useState([])
     const dispatch = useDispatch()
     const { data: check, fetchAPI } = useFetch('get', '/rtr/list');
-
+    
     useEffect(() => {
         fetchAPI();
     }, [fetchAPI])
@@ -31,16 +30,7 @@ const ShopList = () => {
         }
     }, [fetchAPI, check,dispatch])
 
-    function sendProps(item) {
-       Router.push({
-        pathname: `/Admin/RTRDetails/${item.rtr_id}`,
-        query:{
-            item:item.rtr_id
-        }
-       })
-    }
-    
-    return (
+         return (
         <>
             <Navbar />
             <Paper elevation={20} sx={{ width: '98%', mx:'auto', my:'5rem', overflowX: 'auto' }}>

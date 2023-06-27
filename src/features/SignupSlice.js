@@ -11,7 +11,7 @@ const initialState = {
     cell_phone_number: '',
     email_id: '',
     password: '',
-    // rePassword: '',
+
     user_type:2
 }
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import React, { useState, useEffect } from 'react'
+import { useForm, Controller, useController } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
 import { rtrData } from '@/features/RTRformslice';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,45 +13,129 @@ import bg from "../../../public/assets/background3.jpg"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import Navbar from '@/components/Navbar';
 import { bgImgStyling } from '../Login/LoginForm';
+import { useFetch } from '@/constants/useFetch';
 
 
 const RTRform = () => {
+
+
+  const { data: rtrFormData, fetchAPI } = useFetch('post', '/rtr/create')
   const dispatch = useDispatch()
   const RTRformData = useSelector((state) => state.rtrForm);
   const [handleCheck, sethandleCheck] = useState(false)
+  const [totalLevyPayable, setTotalLevyPayable] = useState(0);
   const [selectedDates, setSelectedDates] = useState({
     from: null,
     to: null
   })
 
 
-
-  const { handleSubmit, control, watch, formState: { errors } } = useForm({
+  const { handleSubmit, reset, setValue, control, watch, formState: { errors } } = useForm({
     defaultValues: {
-      dateFrom: null,
-      dateTo: null,
-      companyName: '',
+      user_id: '',
+      from_date: dayjs('2023-06-13'),
+      to_date: dayjs('2023-05-13'),
+      company_name: '',
+      address: '',
       tin: '',
-      email: '',
-      cellPhone: '',
+      first_name: '',
+      last_name: '',
       designation: '',
-      fullName: ''
+      telephone_number: '',
+      cell_phone_number: '',
+      email_id: '',
+      pmp_opening_stock: 0,
+      pmp_purchases: 0,
+      pmp_sales: 0,
+      pmp_rate: 0.35,
+      pmp_levy: 0,
+      pmp_closing_stock: 0,
+      mmp_opening_stock: 0,
+      mmp_purchases: 0,
+      mmp_sales: 0,
+      mmp_rate: 0.30,
+      mmp_levy: 0,
+      mmp_closing_stock: 0,
+      refuse_bags_opening_stock: 0,
+      refuse_bags_purchases: 0,
+      refuse_bags_sales: 0,
+      refuse_bags_rate: 0.35,
+      refuse_bags_levy: 0,
+      refuse_bags_closing_stock: 0,
+      total_levy_payable: 0,
+      approval_status: 1
 
     }
   })
+  const data = watch();
+
+  const calculateLevyAndClosingStock = () => {
+    // Get form data
+
+    // Calculate Levy (E) and Closing Stock for each product
+    const pmpLevy = +data.pmp_sales * +data.pmp_rate;
+    const mmpLevy = +data.mmp_sales * +data.mmp_rate;
+    const refuseBagsLevy = +data.refuse_bags_sales * +data.refuse_bags_rate;
+
+    const pmpClosingStock = Number(+data.pmp_opening_stock + +data.pmp_purchases) - data.pmp_sales
+
+    const mmpClosingStock = Number(+data.mmp_opening_stock + +data.mmp_purchases) - data.mmp_sales
+    const refuseBagsClosingStock =
+      Number(+data.refuse_bags_opening_stock + +data.refuse_bags_purchases) - data.refuse_bags_sales
+
+    // Set the calculated values in the form
+    setValue('pmp_levy', pmpLevy);
+    setValue('pmp_closing_stock', pmpClosingStock);
+    setValue('mmp_levy', mmpLevy);
+    setValue('mmp_closing_stock', mmpClosingStock);
+    setValue('refuse_bags_levy', refuseBagsLevy);
+    setValue('refuse_bags_closing_stock', refuseBagsClosingStock);
+
+    // Calculate and set the Total Levy Payable
+    const totalLevyPayable = pmpLevy + mmpLevy + refuseBagsLevy;
+    setTotalLevyPayable(totalLevyPayable);
+
+    console.log()
+
+  };
+
+  const validateNonNegative = (value) => {
+    if (value > 0) {
+      return true;
+    }
+    return 'Value cannot be negative';
+
+  };
+
+
+
+
+
+
+  // const {field}=useController({
+  //   name,
+  //   control,
+  //   rules: { required: true },
+  // });
 
   const onsubmit = (data) => {
     const watchedData = watch();
-    const from = watchedData.dateFrom ? watchedData.dateFrom.toISOString() : null;
-    const to = watchedData.dateTo ? watchedData.dateTo.toISOString() : null;
+    const from = watchedData.from_date ? watchedData.from_date.toISOString() : null;
+    const to = watchedData.to_date ? watchedData.to_date.toISOString() : null;
 
     setSelectedDates({
       from: from,
       to: to
     });
-
+    console.log(data)
     dispatch(rtrData({ ...data, dateFrom: from, dateTo: to }));
+    fetchAPI({ ...data, dateFrom: from, dateTo: to })
+    reset();
+    setTotalLevyPayable(0)
+    alert("Form Submitted successfully")
   }
+
+  // console.log(RTRformData)
   const formParentStyling = {
     width: { xs: '98%', md: '98%', lg: '98%' },
     margin: '0 auto',
@@ -65,6 +149,7 @@ const RTRform = () => {
     }
   }
 
+
   function handleCheckChange(e) {
     sethandleCheck(!handleCheck);
     console.log(handleCheck)
@@ -72,12 +157,7 @@ const RTRform = () => {
 
   return (
     <>
-      {RTRformData && console.log(RTRformData)}
       <Navbar />
-      {/* <Box sx={{ background: `url(${bg.src})`, backgroundSize: 'cover',mt:'5rem' }}>
-      </Box> */}
-      {/* <Box sx={{ ...bgImgStyling }}>
-      </Box> */}
       <Box sx={{ ...formParentStyling }}>
         <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl my-12'
           onSubmit={handleSubmit(onsubmit)}>
@@ -87,9 +167,9 @@ const RTRform = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Controller
               control={control}
-              name="dateFrom"
+              name="from_date"
               rules={{ required: 'Date is required' }}
-              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined',} }}
+              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined', } }}
                 // onChange={(date) => setfromDate(date.toISOString())}
                 {...field} />}
             >
@@ -97,7 +177,7 @@ const RTRform = () => {
 
             <Controller
               control={control}
-              name="dateTo"
+              name="to_date"
               rules={{ required: 'Date is required' }}
               render={({ field }) => <DatePicker label="To" slotProps={{ textField: { variant: 'outlined', } }}
                 // onChange={(date) => settoDate(date.toISOString())}
@@ -108,7 +188,8 @@ const RTRform = () => {
 
           <Controller
             control={control}
-            name="companyName"
+            name="company_name"
+
             rules={{ required: 'Name of the Company is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='text'
               fieldLabel='Company Name' errorDetail='companyName' errors={errors}
@@ -121,7 +202,7 @@ const RTRform = () => {
             control={control}
             name="tin"
             rules={{ required: 'TIN is required' }}
-            render={({ field }) => <CustomTextField field={field} inputType='number'
+            render={({ field }) => <CustomTextField field={field} inputType='text'
               fieldLabel='TIN' errorDetail='tin' errors={errors}
             />}
           />
@@ -130,7 +211,7 @@ const RTRform = () => {
 
           <Controller
             control={control}
-            name="email"
+            name="email_id"
             rules={{ required: 'Email Address is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='email'
               fieldLabel='Enter Email' errorDetail='email' errors={errors}
@@ -141,7 +222,7 @@ const RTRform = () => {
 
           <Controller
             control={control}
-            name="cellPhone"
+            name="cell_phone_number"
             rules={{ required: 'Cell Phone Number is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='number'
               fieldLabel='Cell Phone Number' errorDetail='cellPhone' errors={errors}
@@ -166,64 +247,186 @@ const RTRform = () => {
                   <TableRow>
                     <TableCell>+30 microns plastics</TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+                        // rules={{ validate: validateNonNegative }}
+                        name="pmp_opening_stock"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.pmp_opening_stock}
+                            helperText={errors.pmp_opening_stock?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+
+
+                        name="pmp_purchases"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.pmp_purchases}
+                            helperText={errors.pmp_purchases?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+                        name="pmp_sales"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.pmp_sales}
+                            helperText={errors.pmp_sales?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
                       <TextField type="number" value='0.35' disabled />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" disabled/>
+                      <Controller
+                        control={control}
+                        name="pmp_levy"
+
+                        render={({ field }) => (
+                          <TextField type="number" {...field} disabled={true} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" disabled/>
+                      <Controller
+                        control={control}
+                        name="pmp_closing_stock"
+                        render={({ field }) => (
+                          <TextField type="number" {...field} disabled={true} />
+                        )}
+                      />
+
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>-30 microns plastics</TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+
+                        name="mmp_opening_stock"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.mmp_opening_stock}
+                            helperText={errors.mmp_opening_stock?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+                        name="mmp_purchases"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.mmp_purchases}
+                            helperText={errors.mmp_purchases?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+
+                        name="mmp_sales"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.mmp_sales}
+                            helperText={errors.mmp_sales?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
                       <TextField type="number" value='0.20' disabled />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" disabled/>
+                      <Controller
+                        control={control}
+                        name="mmp_levy"
+
+                        render={({ field }) => (
+                          <TextField type="number" {...field} disabled={true} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" disabled/>
+                      <Controller
+                        control={control}
+                        name="mmp_closing_stock"
+
+                        render={({ field }) => (
+                          <TextField type="number" {...field} disabled={true} />
+                        )}
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Refuse bags</TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+
+                        name="refuse_bags_opening_stock"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.refuse_bags_opening_stock}
+                            helperText={errors.refuse_bags_opening_stock?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+
+                        name="refuse_bags_purchases"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.refuse_bags_purchases}
+                            helperText={errors.refuse_bags_purchases?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" />
+                      <Controller
+                        control={control}
+
+                        name="refuse_bags_sales"
+                        render={({ field }) => (
+                          <TextField type="number" {...field}
+                            error={!!errors.refuse_bags_sales}
+                            helperText={errors.refuse_bags_sales?.message} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.35' disabled />
+                      <TextField type="text" value='0.35' disabled />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" disabled/>
+                      <Controller
+                        control={control}
+                        name="refuse_bags_levy"
+
+                        render={({ field }) => (
+                          <TextField type="number" {...field} disabled={true} />
+                        )}
+                      />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" disabled/>
+                      <Controller
+                        control={control}
+                        name="refuse_bags_closing_stock"
+
+                        render={({ field }) => (
+                          <TextField type="number" {...field} disabled={true} />
+                        )}
+                      />
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -231,15 +434,16 @@ const RTRform = () => {
             </TableContainer>
             <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
               <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
-              <CustomButton text="Calculate" bgColor='#1f892a' />
+              {totalLevyPayable && <span>{totalLevyPayable}</span>}
+              <CustomButton text="Calculate" bgColor='#1f892a' handleClick={calculateLevyAndClosingStock} />
             </Box>
-          
-           
+
+
           </Box>
 
           <Controller
             control={control}
-            name="fullName"
+            name="first_name"
             rules={{ required: 'FullName is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='text'
               fieldLabel='Full Name' errorDetail='fullName' errors={errors}

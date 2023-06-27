@@ -43,7 +43,7 @@ ul>li,a{
   text-decoration: none;
 }
 ul>li,a:hover{
-  color:#DE3163;
+  color:#FEFEFE;
   transition: color 0.4s;
 }
 
