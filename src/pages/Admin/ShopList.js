@@ -9,10 +9,11 @@ import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useDispatch,useSelector } from 'react-redux';
 import { existingData } from '@/features/RTRformslice';
-import { useSession ,getSession} from 'next-auth/react';
+import { useSession} from 'next-auth/react';
 
-const ShopList = ({}) => {
-    const {data:session} = useSession()
+const ShopList = () => {
+    const {data:session,status} = useSession()
+        console.log(session,status)
     const router = useRouter()
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -29,13 +30,13 @@ const ShopList = ({}) => {
             setUserList(check.result.list)
         }
     }, [fetchAPI, check,dispatch])
-
+    console.log('i am use session',session)
          return (
         <>
-            <Navbar />
+            <Navbar />           
             <Paper elevation={20} sx={{ width: '98%', mx:'auto', my:'5rem', overflowX: 'auto' }}>
                 <Stack spacing={4} direction='column'>
-                    <Typography variant='h1' sx={{ width: '95%', margin: '0 auto', fontSize: '3rem', color: '#2C306F', }}>Shop RTR List</Typography>
+                    <Typography variant='h1' sx={{ width: '95%', margin: '2.55rem auto', fontSize: '3rem', color: '#2C306F', }}>Shop RTR List</Typography>
                     <TableContainer>
                         <Table sx={{ width: '95%', margin: '0 auto' }}>
                             <TableHead sx={{ ' & th': { px: '5px' } }}>

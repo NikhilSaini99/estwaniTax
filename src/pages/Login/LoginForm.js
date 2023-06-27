@@ -9,7 +9,7 @@ import Head from 'next/head'
 import bgImg from "../../../public/assets/background3.jpg"
 import Navbar from '@/components/Navbar'
 import { useFetch } from '@/constants/useFetch'
-import { signIn, signOut, useSession,getSession } from 'next-auth/react'
+import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 
@@ -19,10 +19,12 @@ export const bgImgStyling = {
     backgroundSize: 'cover', position: 'absolute', width: '100%', height: '100%'
 }
 
-const LoginForm = ({ session }) => {
+const LoginForm = ({ session,status }) => {
+    // const {data,status} = useSession()
+    console.log(session,status)
     const router = useRouter()
     const loginFormValue = useSelector((state) => state.loginForm)
-
+    const dispatch = useDispatch()
     const { control,
         watch,
         handleSubmit,
@@ -35,32 +37,52 @@ const LoginForm = ({ session }) => {
         })
 
 
-    async function onSubmit(data) {
-        try{
-            const status = await signIn("credentials", {
-                redirect: false,
+    useEffect(() => {
+
+    }, [loginFormValue])
+   function onSubmit(data) {
+        try {
+            const status = signIn("credentials", {
                 email_id: data.email_id,
                 password: data.password,
-                callbackUrl: '/Admin/ShopList'
+                callbackUrl: '/Admin/ShopList',
+                // redirect:false
             })
-            
+
             if (status.error) {
                 throw new Error("Something went wrong");
-              }
-              
-              if(status.ok){
-                router.push('/Admin/ShopList')
-              }
+            }
 
-            //   const session = await getSession();
-            //   console.log(userType)
-           
-        }catch (error) {
+            if (status.ok) {
+                dispatch(updateLoginState({
+                    email_id: data.email_id,
+                    password: data.password
+                }))
+
+                async function check() {
+                    
+
+                    if (loginFormValue.email_id === "eeaadmin" && loginFormValue.password === "123456") {
+                        router.push('/Admin/ShopList')
+                    }
+                    else {
+                        router.push('/RTR/RTRform')
+                    }
+                }
+
+
+
+                check();
+
+            }
+        } catch (error) {
             alert("UnAuthorize User")
             reset();
-          }
-            
-          
+        }
+
+        console.log(loginFormValue)
+
+
         //   if (userType === 1) {
         //     router.push("/Admin/ShopList"); // Redirect to Admin/ShopList
         //   } else if (userType === 2) {
@@ -77,7 +99,7 @@ const LoginForm = ({ session }) => {
         // if (status?.ok) {  
         //       const userType = status?.user?.user_type;
         //       console.log(userType)
-      
+
         //     if (userType === 1) {
         //       router.push('/Admin/ShopList');
         //     } else if (userType === 2) {
@@ -88,9 +110,9 @@ const LoginForm = ({ session }) => {
         //   } else {
         //     throw new Error("Something went wrong");
         //   }
-        }
-       
-    
+    }
+
+
 
     const formParentStyling = {
         width: { xs: '98%', lg: '40%' },
@@ -112,14 +134,13 @@ const LoginForm = ({ session }) => {
             </Head>
 
             <Navbar />
-
             <Box sx={{ ...formParentStyling }}>
                 <Box className='flex flex-col gap-4 bg-white shadow-2xl p-4 rounded-xl  w-full sm:w-3/4 lg:w-full'
                     component='form' onSubmit={handleSubmit(onSubmit)}
                 >
                     <Box sx={{ marginBottom: '2rem' }}>
                         <Typography variant='h1' sx={{ fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
-                            Get Started Now
+                            Get Started Now {status}
                         </Typography>
                     </Box>
                     <Controller

@@ -98,7 +98,7 @@ const Signup = () => {
             </Box> */}
 
             <Box sx={{ ...formParentStyling }}>
-                <Box className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full'
+                <Box className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full md:p-32 lg:p-24'
                     component='form' onSubmit={handleSubmit(onsubmit)}>
                     <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
                         Sign Up Now!!
@@ -221,14 +221,14 @@ const Signup = () => {
                         }
                     >
                     </Controller>
-                    <Box className="col-span-full flex justify-center">
-                        <CustomButton type='submit' text='Register' bgColor='#2C306F' />
+                    <Box className="col-span-full flex justify-center mt-6">
+                        <CustomButton type='submit' text='Register' bgColor='#2C306F'/>
                     </Box>
                 </Box>
             </Box>
         </>
 
     )
-}
+}   
 
 export default Signup
