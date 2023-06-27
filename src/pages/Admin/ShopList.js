@@ -30,7 +30,7 @@ const ShopList = () => {
             setUserList(check.result.list)
         }
     }, [fetchAPI, check,dispatch])
-    console.log('i am use session',session)
+    
          return (
         <>
             <Navbar />           

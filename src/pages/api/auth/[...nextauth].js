@@ -48,9 +48,11 @@ export default NextAuth({
         console.log(user.result.list.user_type)
 
 
-        if(user.result.list.email_id==='eeaadmin'){
-            console.log('yes user is there')
-              return user
+        if(user.result.list.user_type===1){
+            console.log('yes user is there ',user)
+            
+            // call new API get user details by user ID 
+              return Promise.resolve('123');
         }
        
         return null;
