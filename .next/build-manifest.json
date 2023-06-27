@@ -1,0 +1,99 @@
+{
+  "polyfillFiles": [
+    "static/chunks/polyfills-78c92fac7aa8fdd8.js"
+  ],
+  "devFiles": [],
+  "ampDevFiles": [],
+  "lowPriorityFiles": [
+    "static/EG0YAvZC66mPTWtlZmcQP/_buildManifest.js",
+    "static/EG0YAvZC66mPTWtlZmcQP/_ssgManifest.js"
+  ],
+  "rootMainFiles": [],
+  "pages": {
+    "/": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/935-8ff01c06b0b86f4a.js",
+      "static/chunks/784-e7adc21c045756c4.js",
+      "static/chunks/154-7942dd40332ec4bf.js",
+      "static/chunks/662-6e59ae89d7294930.js",
+      "static/chunks/319-0b998945aa9550b0.js",
+      "static/chunks/22-6416d83355eae1b4.js",
+      "static/chunks/367-0961a7bf0ec25d2a.js",
+      "static/chunks/507-6449e8b157c468e6.js",
+      "static/css/b5da26af17893d6b.css",
+      "static/chunks/pages/index-c6afa9852b5b60db.js"
+    ],
+    "/Admin/RTRDetails/[userDetailsId]": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/935-8ff01c06b0b86f4a.js",
+      "static/chunks/784-e7adc21c045756c4.js",
+      "static/chunks/662-6e59ae89d7294930.js",
+      "static/chunks/319-0b998945aa9550b0.js",
+      "static/css/b5da26af17893d6b.css",
+      "static/chunks/pages/Admin/RTRDetails/[userDetailsId]-02f4685e047b6247.js"
+    ],
+    "/Admin/ShopList": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/935-8ff01c06b0b86f4a.js",
+      "static/chunks/154-7942dd40332ec4bf.js",
+      "static/chunks/662-6e59ae89d7294930.js",
+      "static/css/b5da26af17893d6b.css",
+      "static/chunks/pages/Admin/ShopList-b3583d3b71ad3a91.js"
+    ],
+    "/Login/LoginForm": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/935-8ff01c06b0b86f4a.js",
+      "static/chunks/784-e7adc21c045756c4.js",
+      "static/chunks/154-7942dd40332ec4bf.js",
+      "static/css/b5da26af17893d6b.css",
+      "static/chunks/pages/Login/LoginForm-ba5ca0de193ba6f6.js"
+    ],
+    "/RTR/RTRform": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/935-8ff01c06b0b86f4a.js",
+      "static/chunks/784-e7adc21c045756c4.js",
+      "static/chunks/154-7942dd40332ec4bf.js",
+      "static/chunks/662-6e59ae89d7294930.js",
+      "static/chunks/319-0b998945aa9550b0.js",
+      "static/chunks/367-0961a7bf0ec25d2a.js",
+      "static/chunks/507-6449e8b157c468e6.js",
+      "static/css/b5da26af17893d6b.css",
+      "static/chunks/pages/RTR/RTRform-e5c8468ea8be5508.js"
+    ],
+    "/Signup/Signup": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/935-8ff01c06b0b86f4a.js",
+      "static/chunks/784-e7adc21c045756c4.js",
+      "static/chunks/154-7942dd40332ec4bf.js",
+      "static/chunks/22-6416d83355eae1b4.js",
+      "static/css/b5da26af17893d6b.css",
+      "static/chunks/pages/Signup/Signup-6969ba43ad403453.js"
+    ],
+    "/_app": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/css/138b3c5ab45c242b.css",
+      "static/chunks/pages/_app-50f7057833c606e3.js"
+    ],
+    "/_error": [
+      "static/chunks/webpack-36d12a75f0098f30.js",
+      "static/chunks/framework-305cb810cde7afac.js",
+      "static/chunks/main-d5c9aef8f3ea3bae.js",
+      "static/chunks/pages/_error-54de1933a164a1ff.js"
+    ]
+  },
+  "ampFirstPages": []
+}
