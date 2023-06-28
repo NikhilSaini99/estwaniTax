@@ -10,8 +10,10 @@ import Router, { useRouter } from 'next/router';
 import { useDispatch,useSelector } from 'react-redux';
 import { existingData } from '@/features/RTRformslice';
 import { useSession} from 'next-auth/react';
+import useAuth from '@/utils/useAuth';
 
 const ShopList = () => {
+    // useAuth('/Admin/ShopList');
     const {data:session,status} = useSession()
         // console.log(session,status)
     const router = useRouter()

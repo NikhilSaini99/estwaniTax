@@ -89,7 +89,7 @@ const ShopList = () => {
                                             {/* <Button variant='contained' sx={{ background: "#2e7d32 !important" }} component='a' onClick={()=>sendProps(item)}>Details</Button> */}
                                             {/* <Button variant='contained' sx={{ background: "#2e7d32 !important" }} component='a' onClick={()=>router.push('/Admin/RTRDetails/Rtr')}>Details</Button> */}
                                             <Button variant='contained' sx={{ background: "#2e7d32 !important" }}
-                                                onClick={() => { dispatch(existingData(item)); router.push(`/RTR/RTRform`) }} disabled={item.approval_status === 1 || item.approval_status === 2}>Edit/Update</Button>
+                                                onClick={() => { dispatch(existingData(item)); router.push(`/RTR/EditRtr/${item.rtr_id}`) }} disabled={item.approval_status === 1 || item.approval_status === 2}>Edit/Update</Button>
                                         </TableCell>
                                         <TableCell><Button variant='contained' sx={{ background: "#2e7d32 !important" }}
                                             onClick={() => { dispatch(existingData(item)); router.push(`/Admin/RTRDetails/${item.rtr_id}`) }}>View Details</Button></TableCell>

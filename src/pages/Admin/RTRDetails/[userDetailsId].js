@@ -21,6 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const UserDetails = () => {
     const RTRformData = useSelector((state) => state.rtrForm);
+    const loggedinState = useSelector((state) => state.loginForm)
     const { data: formdata, fetchAPI } = useFetch('put', `/rtr/update_rtr_status/${RTRformData.rtr_id}`)
     const [openAccept, setOpenAccept] = useState(false);
     const [openReject, setOpenReject] = useState(false);
@@ -48,7 +49,7 @@ const UserDetails = () => {
 
     const onsubmit = async (data) => {
         console.log('hello')
-         fetchAPI({
+        fetchAPI({
             email_id: RTRformData.email_id, admin_comments: data.admin_comments,
             approval_status: 2
         })
@@ -59,7 +60,7 @@ const UserDetails = () => {
 
     const onsubmit2 = async (data) => {
         console.log('hello')
-         fetchAPI({
+        fetchAPI({
             email_id: RTRformData.email_id, admin_comments: data.admin_comments,
             approval_status: 3
         })
@@ -67,7 +68,7 @@ const UserDetails = () => {
         setOpenReject(false);
         router.push('/Admin/ShopList')
     }
-// console.log(RTRformData)
+    // console.log(RTRformData)
 
     const formParentStyling = {
         width: { xs: '98%', md: '98%', lg: '98%' },
@@ -293,15 +294,12 @@ const UserDetails = () => {
                     />
 
 
-                    <Box className="col-span-full gap-4 flex justify-center"  >
+                    {loggedinState.adminLogin && <Box className="col-span-full gap-4 flex justify-center"  >
                         <CustomButton text='Accept' bgColor='green' handleClick={handleClickOpenAccept}
-                        //   btnDisable={!handleCheck}
                         />
                         <CustomButton text='Reject' bgColor='red' handleClick={handleClickOpenReject}
-                        //   btnDisable={!handleCheck}
                         />
-
-                    </Box>
+                    </Box>}
 
                     <Dialog
                         open={openAccept}
@@ -319,8 +317,8 @@ const UserDetails = () => {
                             </Controller>
 
                             <Stack spacing={2} direction='row' justifyContent='flex-end'>
-                                <Button onClick={sendCommentandClose} type="submit"  variant='contained' sx={btnsStyling}>Cancel</Button>
-                                <Button onClick={handleSubmit(onsubmit)}  type="submit"  variant='contained' sx={btnsStyling}>Add Comment</Button>
+                                <Button onClick={sendCommentandClose} type="submit" variant='contained' sx={btnsStyling}>Cancel</Button>
+                                <Button onClick={handleSubmit(onsubmit)} type="submit" variant='contained' sx={btnsStyling}>Add Comment</Button>
                             </Stack>
                         </Box>
 

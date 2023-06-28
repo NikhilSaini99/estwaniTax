@@ -12,6 +12,7 @@ import { useFetch } from '@/constants/useFetch'
 import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { encryptParams } from '@/utils/encryption'
+import useAuth  from '@/utils/useAuth'
 
 export const bgImgStyling = {
     background: `url(${bgImg.src})`,
@@ -21,6 +22,7 @@ export const bgImgStyling = {
 
 const LoginForm = ({ session, status }) => {
 
+    // useAuth('/Signup/Signup');
 
     const baseURl = process.env.NEXT_PUBLIC_API_URL
 
