@@ -2,8 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/RTR/EditRtr/[EditRTRform]": "pages/RTR/EditRtr/[EditRTRform].js",
-  "/Login/LoginForm": "pages/Login/LoginForm.js",
+  "/Signup/Signup": "pages/Signup/Signup.js",
+  "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
   "/Admin/ShopList": "pages/Admin/ShopList.js",
-  "/RTR/UserRTRlist": "pages/RTR/UserRTRlist.js"
+  "/Login/LoginForm": "pages/Login/LoginForm.js",
+  "/Admin/RTRDetails/[userDetailsId]": "pages/Admin/RTRDetails/[userDetailsId].js"
 }

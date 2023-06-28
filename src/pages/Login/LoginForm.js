@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateLoginState, adminLogin } from "@/features/formSlice"
+import { useDispatch } from 'react-redux'
+import { updateLoginState } from "@/features/formSlice"
 import CustomButton from "@/components/Button"
 import CustomTextField from '@/components/CustomTextField'
 import { Box, Typography } from '@mui/material'
 import Head from 'next/head'
 import bgImg from "../../../public/assets/background3.jpg"
 import Navbar from '@/components/Navbar'
-import { useFetch } from '@/constants/useFetch'
-import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { encryptParams } from '@/utils/encryption'
-import useAuth  from '@/utils/useAuth'
 
 export const bgImgStyling = {
     background: `url(${bgImg.src})`,
@@ -20,19 +16,17 @@ export const bgImgStyling = {
     backgroundSize: 'cover', position: 'absolute', width: '100%', height: '100%'
 }
 
-const LoginForm = ({ session, status }) => {
+const baseURl = process.env.NEXT_PUBLIC_API_URL
 
-    // useAuth('/Signup/Signup');
+const LoginForm = ({ session, status,hello }) => {
 
-    const baseURl = process.env.NEXT_PUBLIC_API_URL
+    console.log(hello)
 
     // const {data,status} = useSession()
     console.log(session, status)
     const router = useRouter()
-    const loginFormValue = useSelector((state) => state.loginForm)
     const dispatch = useDispatch()
     const { control,
-        watch,
         handleSubmit,
         reset,
         formState: { errors } } = useForm({
@@ -42,58 +36,11 @@ const LoginForm = ({ session, status }) => {
             },
         })
 
-
-    useEffect(() => {
-
-    }, [loginFormValue])
-
     useEffect(() => {
         dispatch(updateLoginState({ adminLogin: null, userLogin: null, loginuserData: null }))
     }, [])
 
-    async function onSubmit(data) {
-        //-------------------------------------------
-        // try {
-        //     const status = signIn("credentials", {
-        //         email_id: data.email_id,
-        //         password: data.password,
-        //         callbackUrl: '/Admin/ShopList',
-        //         // redirect:false
-        //     })
-
-        //     if (status.error) {
-        //         throw new Error("Something went wrong");
-        //     }
-
-        //     if (status.ok) {
-        //         dispatch(updateLoginState({
-        //             email_id: data.email_id,
-        //             password: data.password
-        //         }))
-
-        //         async function check() {
-
-
-        //             if (loginFormValue.email_id === "eeaadmin" && loginFormValue.password === "123456") {
-        //                 router.push('/Admin/ShopList')
-        //             }
-        //             else {
-        //                 router.push('/RTR/RTRform')
-        //             }
-        //         }
-
-
-
-        //         check();
-
-        //     }
-        // } catch (error) {
-        //     alert("UnAuthorize User")
-        //     reset();
-        // }
-
-        // console.log(loginFormValue)
-
+    async function onSubmit(data) {     
         try {
             const res = await fetch(`${baseURl}/user/login`, {
                 method: 'POST',
@@ -108,8 +55,6 @@ const LoginForm = ({ session, status }) => {
 
             const user = await res.json();
             const userDetailObj = user.result.list
-            // const encryptedParam = encryptParams({user_id:user.result.list.user_id})
-
             if (user.result.list.user_type === 1) {
                 dispatch(updateLoginState({ adminLogin: true, userLogin: false, loginuserData: userDetailObj }))
                 router.push('/Admin/ShopList')
@@ -130,43 +75,8 @@ const LoginForm = ({ session, status }) => {
             reset()
         }
 
-
-
-        // -------------------------------------------------
-
-
-        //   if (userType === 1) {
-        //     router.push("/Admin/ShopList"); // Redirect to Admin/ShopList
-        //   } else if (userType === 2) {
-        //     router.push("/Signup/Signup"); // Redirect to Signup/Signup Page
-        //   } else {
-        //     throw new Error("Invalid user type");
-        //   }
-        // }
-
-        // if(status.ok){
-        //     router.push('/Admin/ShopList')
-        // }
-
-        // if (status?.ok) {  
-        //       const userType = status?.user?.user_type;
-        //       console.log(userType)
-
-        //     if (userType === 1) {
-        //       router.push('/Admin/ShopList');
-        //     } else if (userType === 2) {
-        //       router.push("/Signup/Signup");
-        //     } else {
-        //       throw new Error("Invalid user type");
-        //     }
-        //   } else {
-        //     throw new Error("Something went wrong");
-        //   }
     }
-
-
-
-    const formParentStyling = {
+       const formParentStyling = {
         width: { xs: '98%', lg: '40%' },
         margin: '0 auto',
         p: { xs: '0.5rem', lg: '2rem' },
@@ -174,17 +84,14 @@ const LoginForm = ({ session, status }) => {
         position: 'relative',
         top: '0',
     }
-
     return (
         <>
-
             <Head>
                 <title>Eswatini Environment Authority</title>
                 <meta name="description" content="Generated by create next app" />
                 <link rel="icon" href="/favicon.png" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
-
             <Navbar />
             <Box sx={{ ...formParentStyling }}>
                 <Box className='flex flex-col gap-4 bg-white shadow-2xl p-4 rounded-xl  w-full sm:w-3/4 lg:w-full'
@@ -198,8 +105,6 @@ const LoginForm = ({ session, status }) => {
                     <Controller
                         control={control}
                         name="email_id"
-
-                        // rules={{ required: 'Email is required' }}
                         render={({ field }) => <CustomTextField field={field} inputType='text'
                             fieldLabel='Enter Email' errorDetail='email_id' errors={errors}
                         />}>
@@ -216,9 +121,6 @@ const LoginForm = ({ session, status }) => {
                     <Box className="flex justify-center">
                         <CustomButton type='submit' text='Login In' bgColor='#1f892a' />
                     </Box>
-                    {/* <Box className="flex justify-center">
-                        <Link href='/Signup/Signup'><CustomButton text="New User?" bgColor='#2C306F' /></Link>
-                    </Box> */}
                 </Box>
             </Box>
         </>
@@ -227,13 +129,9 @@ const LoginForm = ({ session, status }) => {
 
 export default LoginForm
 
-// const crypto = require('crypto');
 
-// const generateSecretKey = () => {
-//   const randomBytes = crypto.randomBytes(32);
-//   const secretKey = randomBytes.toString('hex');
-//   return secretKey;
-// };
+export async function getServerSideProps({context}){
 
-// const secretKey = generateSecretKey();
-// console.log('Secret Key:', secretKey);
+    const hello = "hello"
+    return {props:{hello}}
+}

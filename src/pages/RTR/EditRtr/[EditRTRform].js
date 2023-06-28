@@ -431,13 +431,13 @@ const EditRTRform = () => {
               </Table>
             </TableContainer>
             <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
-              <Box className="flex items-center gap-4">
+              <Box className="flex justify-center items-center gap-4">
                 <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
                 <Controller
                   control={control}
                   name="total_levy_payable"
                   render={({ field }) => (
-                    <TextField type="number" {...field} variant='standard' disabled={true} sx={{ width: '150px' }} inputProps={disabledTextFieldStyling} />
+                    <TextField type="number" {...field} variant='outlined' disabled={true} size='small'  sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
                   )}
                 />
               </Box>

@@ -1,12 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useRef, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { Paper, Box, Table, TableBody, Dialog, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Slide, DialogTitle, Button, Stack } from '@mui/material';
-import Link from 'next/link';
+import { Box, Table, TableBody, Dialog, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Slide, Button, Stack, InputLabel } from '@mui/material';
 import Navbar from '@/components/Navbar';
-import { useTheme } from '@mui/material/styles';
-import { useMediaQuery } from '@mui/material';
 import CustomTextField from '@/components/CustomTextField';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import CustomButton from '@/components/Button';
@@ -41,7 +38,7 @@ const UserDetails = () => {
             cellPhone: RTRformData.cell_phone_number,
             designation: RTRformData.designation,
             fullName: RTRformData.first_name,
-            admin_comments: RTRformData.admin_comments || "",
+            admin_comments: "",
             approval_status: RTRformData.approval_status,
             total_levy_payable: RTRformData.total_levy_payable
         }
@@ -68,7 +65,7 @@ const UserDetails = () => {
         setOpenReject(false);
         router.push('/Admin/ShopList')
     }
-    // console.log(RTRformData)
+    console.log(RTRformData)
 
     const formParentStyling = {
         width: { xs: '98%', md: '98%', lg: '98%' },
@@ -108,7 +105,6 @@ const UserDetails = () => {
 
     return (
         <>
-            {/* {RTRformData && console.log(RTRformData)} */}
             <Navbar />
             <Box sx={{ ...formParentStyling }}>
                 <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl mt-24'
@@ -116,6 +112,8 @@ const UserDetails = () => {
                     <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
                         Plastic Levy Return!
                     </Typography>
+                    <Typography className='col-span-full' variant='h2' sx={{ fontSize: { lg: '2rem' }, fontWeight: 'inherit' }}>
+                        {RTRformData.month_text} RTR</Typography>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Controller
                             control={control}
@@ -262,13 +260,14 @@ const UserDetails = () => {
                             </Table>
                         </TableContainer>
                         <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
-                            <Box className="flex items-center gap-4">
-                                <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
+                            <Box className="flex justify-center items-center gap-4">
+
+                                <Typography variant="body1" sx={{ fontWeight: "bold" }} >TOTAL LEVY PAYABLE</Typography>
                                 <Controller
                                     control={control}
                                     name="total_levy_payable"
                                     render={({ field }) => (
-                                        <TextField type="number" {...field} variant='standard' disabled={true} sx={{ width: '150px' }} inputProps={{ ...disabledTextFieldStyling }} />
+                                        <TextField type="number" {...field} variant='outlined' disabled={true} size='small' sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
                                     )}
                                 />
                             </Box>
@@ -313,7 +312,7 @@ const UserDetails = () => {
 
                             <Controller control={control}
                                 name="admin_comments"
-                                render={({ field }) => <TextField multiline={true} fullWidth inputProps={{ style: { height: '150px' } }} {...field} />}>
+                                render={({ field }) => <TextField multiline={true} fullWidth inputProps={{ style: { height: '150px' } }} {...field} placeholder='Add comments' />}>
                             </Controller>
 
                             <Stack spacing={2} direction='row' justifyContent='flex-end'>
@@ -335,7 +334,7 @@ const UserDetails = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', width: '550px', p: '2rem', gap: '2rem', alignItems: 'center' }}>
                             <Controller control={control}
                                 name="admin_comments"
-                                render={({ field }) => <TextField multiline={true} fullWidth inputProps={{ style: { height: '150px' } }} {...field} />}>
+                                render={({ field }) => <TextField multiline={true} fullWidth inputProps={{ style: { height: '150px' } }} {...field} placeholder='Add comments' />}>
                             </Controller>
                             <Stack spacing={2} direction='row' justifyContent='flex-end'>
                                 <Button onClick={sendCommentandClose2} type="submit" variant='contained' sx={{ ...btnsStyling, background: '#ff0000' }}>Cancel</Button>

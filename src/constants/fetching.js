@@ -1,34 +1,19 @@
-import axios from 'axios'
-const baseURl = process.env.NEXT_PUBLIC_API_URL
+import axios from 'axios';
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const fetching = async (method, path, databody) => {
-  try {
-    if (method === 'post') {
-      const response = await axios({
-        method: method,
-        url: `${baseURl}${path}`,
-        data: databody
-      })
-      return response
-    }
-    else if (method === "get") {
-      const response = await axios({
-        method: method,
-        url: `${baseURl}${path}`,
-      })
-      return response
-    }
-    else if (method === "put") {
-      const response = await axios({
-        method: method,
-        url: `${baseURl}${path}`,
-        data: databody
-      })
-      return response
-    }
-  } catch (err) {
-    return err
-  }
-}
+  const options = {
+    method,
+    url: `${baseURL}${path}`,
+    data: databody,
+  };
 
-export default fetching
+  try {
+    const response = await axios(options);
+    return response;
+  } catch (err) {
+    return err;
+  }
+};
+
+export default fetching;

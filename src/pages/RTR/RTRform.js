@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { Box, Typography,} from '@mui/material';
+import { Box, Typography, } from '@mui/material';
 import CustomButton from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
@@ -15,7 +15,10 @@ import { useFetch } from '@/constants/useFetch';
 import { useRouter } from 'next/router';
 
 
-
+const date = new Date();
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const eligibleMonthText = month[date.getMonth()-1];
+const eligibleMonthNumber = (date.getMonth()+1)-1
 const RTRform = () => {
 
   const router = useRouter()
@@ -43,6 +46,8 @@ const RTRform = () => {
       user_id: loggedInuserData?.loginuserData?.user_id,
       from_date: dayjs('2023-06-13'),
       to_date: dayjs('2023-05-13'),
+      month_text: eligibleMonthText,
+      month_number: eligibleMonthNumber,
       company_name: loggedInuserData?.loginuserData?.name_of_business,
       address: '',
       tin: loggedInuserData?.loginuserData?.tin,
@@ -152,16 +157,25 @@ const RTRform = () => {
     console.log(handleCheck)
   }
 
+  const headingStyling = {
+    marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' 
+  }
+
   return (
     <>
       <Navbar />
       <Box sx={{ ...formParentStyling }}>
         <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl my-12'
           onSubmit={handleSubmit(onsubmit)}>
-          <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
-            Plastic Levy Return!
+          <Typography className='col-span-full' variant='h1' sx={{...headingStyling}}>
+            Fill RTR Form
           </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+          <Typography className='col-span-full' variant='h2' sx={{...headingStyling,fontSize:{lg:'2rem'},fontWeight:'inherit'}}>
+            You are eligible to fill RTR for the month of <Typography variant='h2' sx={{...headingStyling, display:'inline',color:'#268121',fontWeight:'600'}}>{month[date.getMonth()-1]}!</Typography>
+          </Typography>
+
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Controller
               control={control}
               name="from_date"
@@ -181,7 +195,7 @@ const RTRform = () => {
                 {...field} />}
             >
             </Controller>
-          </LocalizationProvider>
+          </LocalizationProvider> */}
 
           <Controller
             control={control}
@@ -280,7 +294,7 @@ const RTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.35' disabled inputProps={disabledTextFieldStyling}/>
+                      <TextField type="number" value='0.35' disabled inputProps={disabledTextFieldStyling} />
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -288,7 +302,7 @@ const RTRform = () => {
                         name="pmp_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -297,7 +311,7 @@ const RTRform = () => {
                         control={control}
                         name="pmp_closing_stock"
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
 
@@ -341,7 +355,7 @@ const RTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.20' disabled inputProps={disabledTextFieldStyling}/>
+                      <TextField type="number" value='0.20' disabled inputProps={disabledTextFieldStyling} />
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -349,7 +363,7 @@ const RTRform = () => {
                         name="mmp_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -359,7 +373,7 @@ const RTRform = () => {
                         name="mmp_closing_stock"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -403,7 +417,7 @@ const RTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="text" value='0.35' disabled inputProps={disabledTextFieldStyling}/>
+                      <TextField type="text" value='0.35' disabled inputProps={disabledTextFieldStyling} />
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -411,7 +425,7 @@ const RTRform = () => {
                         name="refuse_bags_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -421,7 +435,7 @@ const RTRform = () => {
                         name="refuse_bags_closing_stock"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -430,13 +444,13 @@ const RTRform = () => {
               </Table>
             </TableContainer>
             <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
-              <Box className="flex items-center gap-4">
+            <Box className="flex justify-center items-center gap-4">
                 <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
                 <Controller
                   control={control}
                   name="total_levy_payable"
                   render={({ field }) => (
-                    <TextField type="number" {...field} variant='standard' disabled={true} sx={{ width: '150px' }} inputProps={disabledTextFieldStyling} />
+                    <TextField type="number" {...field} variant='outlined' disabled={true} size='small'  sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
                   )}
                 />
               </Box>

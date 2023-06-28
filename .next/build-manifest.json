@@ -12,6 +12,11 @@
   ],
   "rootMainFiles": [],
   "pages": {
+    "/Admin/RTRDetails/[userDetailsId]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/Admin/RTRDetails/[userDetailsId].js"
+    ],
     "/Admin/ShopList": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -22,15 +27,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/Login/LoginForm.js"
     ],
-    "/RTR/EditRtr/[EditRTRform]": [
+    "/Signup/Signup": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/RTR/EditRtr/[EditRTRform].js"
-    ],
-    "/RTR/UserRTRlist": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/RTR/UserRTRlist.js"
+      "static/chunks/pages/Signup/Signup.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

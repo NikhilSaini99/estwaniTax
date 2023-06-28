@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Paper, Box, Table, TableBody, ButtonGroup, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Stack, Typography } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import { useFetch } from '@/constants/useFetch';
-import CustomButton from '@/components/Button';
 import Navbar from '@/components/Navbar';
-import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import{ useRouter } from 'next/router';
 import { useDispatch,useSelector } from 'react-redux';
 import { existingData } from '@/features/RTRformslice';
 import { useSession} from 'next-auth/react';
-import useAuth from '@/utils/useAuth';
 
 const ShopList = () => {
-    // useAuth('/Admin/ShopList');
+
     const {data:session,status} = useSession()
         // console.log(session,status)
     const router = useRouter()
@@ -22,7 +19,7 @@ const ShopList = () => {
     const [userList, setUserList] = useState([])
     const dispatch = useDispatch()
     const loginStatus = useSelector((state)=>state.loginForm)
-    const { data: check, fetchAPI } = useFetch('get', '/rtr/list');
+    const { data: check,loading, fetchAPI } = useFetch('get', '/rtr/list');
     const [adminLoginState,setAdminLoginState] = useState(false)
     
     useEffect(() => {
@@ -33,17 +30,18 @@ const ShopList = () => {
         if (check !== null) {
             setUserList(check.result.list)
         }
-    }, [fetchAPI, check,dispatch])
+    }, [check,dispatch])
 
     useFetch(()=>{
         setAdminLoginState(true)
     },[loginStatus])
     
-    console.log(loginStatus.adminLogin)
+    console.log(loading)
 
+ 
          return (
         <>
-        
+        { console.log(loading)}
             <Navbar />           
             <Paper elevation={20} sx={{ width: '98%', mx:'auto', my:'5rem', overflowX: 'auto' }}>
                 <Stack spacing={4} direction='column'>
@@ -122,3 +120,4 @@ export default ShopList
 
     }, [])
  */
+

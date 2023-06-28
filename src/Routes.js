@@ -8,7 +8,7 @@ const SignupForm = lazy(()=>import('../src/pages/Signup/Signup'))
 const PageRoutes = () => {
   return (
     <Routes >
-        <Route path="/" element={<LoginForm/>}/>
+        {/* <Route path="/" element={<LoginForm/>}/> */}
     </Routes>
   )
 }

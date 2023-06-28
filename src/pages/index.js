@@ -2,7 +2,8 @@
 import { Inter } from 'next/font/google'
 import LoginForm from './Login/LoginForm'
 import ShopList from '@/pages/Admin/ShopList'
-import { useSession, signOut,getSession } from 'next-auth/react'
+import { useSession, signOut, getSession } from 'next-auth/react'
+import dynamic from 'next/dynamic'
 
 
 export function handleSignOut() {
@@ -10,16 +11,17 @@ export function handleSignOut() {
 }
 
 export default function Home() {
-
   //using this session i can display the userName or email
-  const { data:session, status } = useSession()
+  const { data: session, status } = useSession()
   console.log(status)
+
+  const LoginForm = dynamic(() => import('@/pages/Login/LoginForm'), { srr: true })
   return (
     <>
-      {session ? <ShopList /> : <LoginForm session={session} status={status} />}
-      {/* <LoginForm/> */}
+      {/* {session ? <ShopList /> : <LoginForm session={session} status={status} />} */}
+      <LoginForm />
     </>
-  )
+  ) 
 }
 
 
