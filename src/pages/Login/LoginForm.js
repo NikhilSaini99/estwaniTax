@@ -11,7 +11,7 @@ import Navbar from '@/components/Navbar'
 import { useFetch } from '@/constants/useFetch'
 import { signIn, signOut, useSession, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-
+import { encryptParams } from '@/utils/encryption'
 
 export const bgImgStyling = {
     background: `url(${bgImg.src})`,
@@ -19,9 +19,13 @@ export const bgImgStyling = {
     backgroundSize: 'cover', position: 'absolute', width: '100%', height: '100%'
 }
 
-const LoginForm = ({ session,status }) => {
+const LoginForm = ({ session, status }) => {
+
+
+    const baseURl = process.env.NEXT_PUBLIC_API_URL
+
     // const {data,status} = useSession()
-    console.log(session,status)
+    console.log(session, status)
     const router = useRouter()
     const loginFormValue = useSelector((state) => state.loginForm)
     const dispatch = useDispatch()
@@ -40,47 +44,93 @@ const LoginForm = ({ session,status }) => {
     useEffect(() => {
 
     }, [loginFormValue])
-   function onSubmit(data) {
+
+    useEffect(() => {
+        dispatch(updateLoginState({ adminLogin: null, userLogin: null, loginuserData: null }))
+    }, [])
+
+    async function onSubmit(data) {
+        //-------------------------------------------
+        // try {
+        //     const status = signIn("credentials", {
+        //         email_id: data.email_id,
+        //         password: data.password,
+        //         callbackUrl: '/Admin/ShopList',
+        //         // redirect:false
+        //     })
+
+        //     if (status.error) {
+        //         throw new Error("Something went wrong");
+        //     }
+
+        //     if (status.ok) {
+        //         dispatch(updateLoginState({
+        //             email_id: data.email_id,
+        //             password: data.password
+        //         }))
+
+        //         async function check() {
+
+
+        //             if (loginFormValue.email_id === "eeaadmin" && loginFormValue.password === "123456") {
+        //                 router.push('/Admin/ShopList')
+        //             }
+        //             else {
+        //                 router.push('/RTR/RTRform')
+        //             }
+        //         }
+
+
+
+        //         check();
+
+        //     }
+        // } catch (error) {
+        //     alert("UnAuthorize User")
+        //     reset();
+        // }
+
+        // console.log(loginFormValue)
+
         try {
-            const status = signIn("credentials", {
-                email_id: data.email_id,
-                password: data.password,
-                callbackUrl: '/Admin/ShopList',
-                // redirect:false
-            })
-
-            if (status.error) {
-                throw new Error("Something went wrong");
-            }
-
-            if (status.ok) {
-                dispatch(updateLoginState({
+            const res = await fetch(`${baseURl}/user/login`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({
                     email_id: data.email_id,
                     password: data.password
-                }))
+                })
+            })
 
-                async function check() {
-                    
+            const user = await res.json();
+            const userDetailObj = user.result.list
+            // const encryptedParam = encryptParams({user_id:user.result.list.user_id})
 
-                    if (loginFormValue.email_id === "eeaadmin" && loginFormValue.password === "123456") {
-                        router.push('/Admin/ShopList')
-                    }
-                    else {
-                        router.push('/RTR/RTRform')
-                    }
-                }
-
-
-
-                check();
-
+            if (user.result.list.user_type === 1) {
+                dispatch(updateLoginState({ adminLogin: true, userLogin: false, loginuserData: userDetailObj }))
+                router.push('/Admin/ShopList')
             }
-        } catch (error) {
-            alert("UnAuthorize User")
-            reset();
+            else if (user.result.list.user_type === 2) {
+                dispatch(updateLoginState({ adminLogin: false, userLogin: true, loginuserData: userDetailObj }))
+                router.push({
+                    pathname: '/RTR/UserRTRlist',
+                    query: { user_id: user.result.list.user_id },
+                },
+                    undefined,
+                    { shallow: true }
+                )
+            }
+        } catch (e) {
+            const error = new Error("Un-AuthorizeUser or Recheck Email Id or Password")
+            alert(error)
+            reset()
         }
 
-        console.log(loginFormValue)
+
+
+        // -------------------------------------------------
 
 
         //   if (userType === 1) {
@@ -140,7 +190,7 @@ const LoginForm = ({ session,status }) => {
                 >
                     <Box sx={{ marginBottom: '2rem' }}>
                         <Typography variant='h1' sx={{ fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
-                            Get Started Now {status}
+                            Get Started Now
                         </Typography>
                     </Box>
                     <Controller
@@ -175,3 +225,13 @@ const LoginForm = ({ session,status }) => {
 
 export default LoginForm
 
+// const crypto = require('crypto');
+
+// const generateSecretKey = () => {
+//   const randomBytes = crypto.randomBytes(32);
+//   const secretKey = randomBytes.toString('hex');
+//   return secretKey;
+// };
+
+// const secretKey = generateSecretKey();
+// console.log('Secret Key:', secretKey);

@@ -6,20 +6,23 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography,} from '@mui/material';
 import CustomButton from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
-import bg from "../../../public/assets/background3.jpg"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import Navbar from '@/components/Navbar';
-import { bgImgStyling } from '../Login/LoginForm';
 import { useFetch } from '@/constants/useFetch';
+import { useRouter } from 'next/router';
+
 
 
 const RTRform = () => {
 
+  const router = useRouter()
 
+  console.log(router)
   const { data: rtrFormData, fetchAPI } = useFetch('post', '/rtr/create')
+  const loggedInuserData = useSelector((state) => state.loginForm);
   const dispatch = useDispatch()
   const RTRformData = useSelector((state) => state.rtrForm);
   const [handleCheck, sethandleCheck] = useState(false)
@@ -29,21 +32,26 @@ const RTRform = () => {
     to: null
   })
 
+  useEffect(() => {
+    //
+  }, [loggedInuserData])
+
+  console.log(loggedInuserData)
 
   const { handleSubmit, reset, setValue, control, watch, formState: { errors } } = useForm({
     defaultValues: {
-      user_id: '',
+      user_id: loggedInuserData?.loginuserData?.user_id,
       from_date: dayjs('2023-06-13'),
       to_date: dayjs('2023-05-13'),
-      company_name: '',
+      company_name: loggedInuserData?.loginuserData?.name_of_business,
       address: '',
-      tin: '',
-      first_name: '',
+      tin: loggedInuserData?.loginuserData?.tin,
+      first_name: loggedInuserData?.loginuserData?.first_name,
       last_name: '',
-      designation: '',
+      designation: loggedInuserData?.loginuserData?.designation,
       telephone_number: '',
-      cell_phone_number: '',
-      email_id: '',
+      cell_phone_number: loggedInuserData?.loginuserData?.cell_phone_number,
+      email_id: loggedInuserData?.loginuserData?.email_id,
       pmp_opening_stock: 0,
       pmp_purchases: 0,
       pmp_sales: 0,
@@ -93,30 +101,12 @@ const RTRform = () => {
 
     // Calculate and set the Total Levy Payable
     const totalLevyPayable = pmpLevy + mmpLevy + refuseBagsLevy;
-    setTotalLevyPayable(totalLevyPayable);
-
-    console.log()
-
-  };
-
-  const validateNonNegative = (value) => {
-    if (value > 0) {
-      return true;
-    }
-    return 'Value cannot be negative';
+    setValue('total_levy_payable', totalLevyPayable)
 
   };
 
 
-
-
-
-
-  // const {field}=useController({
-  //   name,
-  //   control,
-  //   rules: { required: true },
-  // });
+  const disabledTextFieldStyling = { style: { fontWeight: 'bold' } }
 
   const onsubmit = (data) => {
     const watchedData = watch();
@@ -133,6 +123,13 @@ const RTRform = () => {
     reset();
     setTotalLevyPayable(0)
     alert("Form Submitted successfully")
+    router.push({
+      pathname: '/RTR/UserRTRlist',
+      query: { user_id: loggedInuserData?.loginuserData?.user_id }
+    },
+      undefined,
+      { shallow: true })
+    //hiding query parameters from the URL using above
   }
 
   // console.log(RTRformData)
@@ -169,7 +166,7 @@ const RTRform = () => {
               control={control}
               name="from_date"
               rules={{ required: 'Date is required' }}
-              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined', } }}
+              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined'} }}
                 // onChange={(date) => setfromDate(date.toISOString())}
                 {...field} />}
             >
@@ -192,7 +189,7 @@ const RTRform = () => {
 
             rules={{ required: 'Name of the Company is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='text'
-              fieldLabel='Company Name' errorDetail='companyName' errors={errors}
+              fieldLabel='Company Name' errorDetail='companyName' errors={errors} disabled={true} inputpropStyling={disabledTextFieldStyling}
             />}
           />
 
@@ -202,7 +199,7 @@ const RTRform = () => {
             control={control}
             name="tin"
             rules={{ required: 'TIN is required' }}
-            render={({ field }) => <CustomTextField field={field} inputType='text'
+            render={({ field }) => <CustomTextField field={field} inputType='text' disabled={true} inputpropStyling={disabledTextFieldStyling}
               fieldLabel='TIN' errorDetail='tin' errors={errors}
             />}
           />
@@ -213,7 +210,7 @@ const RTRform = () => {
             control={control}
             name="email_id"
             rules={{ required: 'Email Address is required' }}
-            render={({ field }) => <CustomTextField field={field} inputType='email'
+            render={({ field }) => <CustomTextField field={field} inputType='email' disabled={true} inputpropStyling={disabledTextFieldStyling}
               fieldLabel='Enter Email' errorDetail='email' errors={errors}
             />}
           />
@@ -224,7 +221,7 @@ const RTRform = () => {
             control={control}
             name="cell_phone_number"
             rules={{ required: 'Cell Phone Number is required' }}
-            render={({ field }) => <CustomTextField field={field} inputType='number'
+            render={({ field }) => <CustomTextField field={field} inputType='number' disabled={true} inputpropStyling={disabledTextFieldStyling}
               fieldLabel='Cell Phone Number' errorDetail='cellPhone' errors={errors}
             />}
           />
@@ -283,7 +280,7 @@ const RTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.35' disabled />
+                      <TextField type="number" value='0.35' disabled inputProps={disabledTextFieldStyling}/>
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -291,7 +288,7 @@ const RTRform = () => {
                         name="pmp_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} />
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
                         )}
                       />
                     </TableCell>
@@ -300,7 +297,7 @@ const RTRform = () => {
                         control={control}
                         name="pmp_closing_stock"
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} />
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
                         )}
                       />
 
@@ -344,7 +341,7 @@ const RTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.20' disabled />
+                      <TextField type="number" value='0.20' disabled inputProps={disabledTextFieldStyling}/>
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -352,7 +349,7 @@ const RTRform = () => {
                         name="mmp_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} />
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
                         )}
                       />
                     </TableCell>
@@ -362,7 +359,7 @@ const RTRform = () => {
                         name="mmp_closing_stock"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} />
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
                         )}
                       />
                     </TableCell>
@@ -406,7 +403,7 @@ const RTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="text" value='0.35' disabled />
+                      <TextField type="text" value='0.35' disabled inputProps={disabledTextFieldStyling}/>
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -414,7 +411,7 @@ const RTRform = () => {
                         name="refuse_bags_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} />
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
                         )}
                       />
                     </TableCell>
@@ -424,7 +421,7 @@ const RTRform = () => {
                         name="refuse_bags_closing_stock"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} />
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
                         )}
                       />
                     </TableCell>
@@ -433,8 +430,16 @@ const RTRform = () => {
               </Table>
             </TableContainer>
             <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
-              <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
-              {totalLevyPayable && <span>{totalLevyPayable}</span>}
+              <Box className="flex items-center gap-4">
+                <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
+                <Controller
+                  control={control}
+                  name="total_levy_payable"
+                  render={({ field }) => (
+                    <TextField type="number" {...field} variant='standard' disabled={true} sx={{ width: '150px' }} inputProps={disabledTextFieldStyling} />
+                  )}
+                />
+              </Box>
               <CustomButton text="Calculate" bgColor='#1f892a' handleClick={calculateLevyAndClosingStock} />
             </Box>
 
@@ -446,7 +451,7 @@ const RTRform = () => {
             name="first_name"
             rules={{ required: 'FullName is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='text'
-              fieldLabel='Full Name' errorDetail='fullName' errors={errors}
+              fieldLabel='Full Name' errorDetail='fullName' errors={errors} disabled={true} inputpropStyling={disabledTextFieldStyling}
             />}
           />
           <Controller
@@ -454,7 +459,7 @@ const RTRform = () => {
             name="designation"
             rules={{ required: 'Desgination is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='text'
-              fieldLabel='Desgination' errorDetail='designation' errors={errors}
+              fieldLabel='Desgination' errorDetail='designation' errors={errors} disabled={true} inputpropStyling={disabledTextFieldStyling}
             />}
           />
 

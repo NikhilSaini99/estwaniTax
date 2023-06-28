@@ -18,6 +18,14 @@ const fetching = async (method, path, databody) => {
       })
       return response
     }
+    else if (method === "put") {
+      const response = await axios({
+        method: method,
+        url: `${baseURl}${path}`,
+        data: databody
+      })
+      return response
+    }
   } catch (err) {
     return err
   }

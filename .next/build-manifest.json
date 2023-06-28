@@ -12,10 +12,15 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/Admin/ShopList": [
+    "/RTR/RTRform": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/Admin/ShopList.js"
+      "static/chunks/pages/RTR/RTRform.js"
+    ],
+    "/RTR/UserRTRlist": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/RTR/UserRTRlist.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

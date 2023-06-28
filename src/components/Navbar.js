@@ -7,12 +7,22 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from './Navbar.module.css'
 import Link from "next/link";
+import { useSelector, useDispatch } from "react-redux";
+import { updateLoginState } from "@/features/formSlice";
+
+
 
 
 const Navbar = () => {
+  const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false);
   const [navColor, setNavColor] = useState(false)
+  const loginStatus = useSelector((state) => state.loginForm)
+  const [intialTry, setInitialtry] = useState(false)
 
+  useEffect(() => {
+    // setAdminLoginState(true)
+  }, [loginStatus])
 
   function changeColor() {
     if (window.scrollY > 100) {
@@ -22,7 +32,7 @@ const Navbar = () => {
       setNavColor(false)
     }
   }
- 
+
   useEffect(() => {
     changeColor();
     window.addEventListener('scroll', changeColor);
@@ -40,14 +50,14 @@ const Navbar = () => {
       <Stack
         py={1.5}
         sx={{
-          width:"100%",
+          width: "100%",
           position: "relative", top: '0',
           flexDirection: { xs: "row", sm: "row", md: "row" },
           ...(navColor ? {
-            backgroundColor:'#1f892a',
+            backgroundColor: '#1f892a',
             transition: "background-color 0.5s ease",
           } : {
-            backgroundColor:'#1f892aC5   ',
+            backgroundColor: '#1f892aC5   ',
             transition: 'background-color 0.8s ease-out',
           }),
           display: "flex",
@@ -68,28 +78,36 @@ const Navbar = () => {
             alignItems: "center",
             gap: { xs: "10px", sm: "20px" },
             py: { xs: "1rem", sm: "0.8rem", md: "0.2rem" },
-            
+
           }}
         >
-        <Box sx={{display:'flex',alignItems:'center',gap:'0.2rem'}}>
-        <Link href={'/'}><Image
-            src={AvatarImg}
-            alt="Profile_image"
-            style={{
-              width: "100%",
-              height: '100%',
-              maxWidth: "10rem",
-              borderRadius: "50%",
-            }}
-          /></Link>
-        </Box>
-         
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+            <Image
+              src={AvatarImg}
+              alt="Profile_image"
+              style={{
+                width: "100%",
+                height: '100%',
+                maxWidth: "10rem",
+                borderRadius: "50%",
+                cursor: 'pointer'
+              }}
+            />
+          </Box>
+
         </Box>
 
         <Box fontWeight="bold">
           <ul className={styles.check}>
-            <Link href={'/RTR/RTRform'}>User RTR Form</Link>
-            <Link href={'/Signup/Signup'}>Registration Form</Link>
+            {loginStatus.adminLogin && <><Link href={`/Admin/ShopList`}>Home</Link><Link href={'/Signup/Signup'}>Registration Form</Link>
+
+              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+
+            {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>Add New RTR</Link>
+
+              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+
+
           </ul>
           <Button sx={{ display: "none", color: 'black' }}
             onClick={handleHamburger}
@@ -121,7 +139,14 @@ const Navbar = () => {
 
           <Box fontWeight="bold">
             <ul>
-            <Link href={'/RTR/RTRform'}>User RTR Form</Link>
+              {loginStatus.adminLogin && <><Link href={`/Admin/ShopList`}>Home</Link><Link href={'/Signup/Signup'}>Registration Form</Link>
+
+                <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+
+              {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>Add New RTR</Link>
+
+                <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+
             </ul>
 
             <IconButton
@@ -142,7 +167,7 @@ const Navbar = () => {
           </Box>
         </Drawer>
       </Stack>
-     </Paper>
+    </Paper>
   );
 };
 export default Navbar;

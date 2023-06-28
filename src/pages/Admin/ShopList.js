@@ -13,13 +13,15 @@ import { useSession} from 'next-auth/react';
 
 const ShopList = () => {
     const {data:session,status} = useSession()
-        console.log(session,status)
+        // console.log(session,status)
     const router = useRouter()
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [userList, setUserList] = useState([])
     const dispatch = useDispatch()
+    const loginStatus = useSelector((state)=>state.loginForm)
     const { data: check, fetchAPI } = useFetch('get', '/rtr/list');
+    const [adminLoginState,setAdminLoginState] = useState(false)
     
     useEffect(() => {
         fetchAPI();
@@ -30,9 +32,16 @@ const ShopList = () => {
             setUserList(check.result.list)
         }
     }, [fetchAPI, check,dispatch])
+
+    useFetch(()=>{
+        setAdminLoginState(true)
+    },[loginStatus])
     
+    console.log(loginStatus.adminLogin)
+
          return (
         <>
+        
             <Navbar />           
             <Paper elevation={20} sx={{ width: '98%', mx:'auto', my:'5rem', overflowX: 'auto' }}>
                 <Stack spacing={4} direction='column'>
@@ -74,8 +83,8 @@ const ShopList = () => {
                                             {/* <CustomButton text="Details" bgColor="#2e7d32" handleClick={() => { console.log(item) }} /> */}
                                             {/* <Button variant='contained' sx={{ background: "#2e7d32 !important" }} component='a' onClick={()=>sendProps(item)}>Details</Button> */}
                                             {/* <Button variant='contained' sx={{ background: "#2e7d32 !important" }} component='a' onClick={()=>router.push('/Admin/RTRDetails/Rtr')}>Details</Button> */}
-                                            <Link href={{pathname:`/Admin/RTRDetails/${item.rtr_id}`}}><Button variant='contained' sx={{background:"#2e7d32 !important"}}
-                                            onClick={()=>{dispatch(existingData(item))}}>Details</Button></Link>
+                                            <Button variant='contained' sx={{background:"#2e7d32 !important"}}
+                                            onClick={()=>{dispatch(existingData(item)); router.push(`/Admin/RTRDetails/${item.rtr_id}`)}}>Details</Button>
 
                                         </TableCell>
                                     </TableRow>

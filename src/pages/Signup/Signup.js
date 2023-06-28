@@ -24,16 +24,16 @@ const Signup = () => {
 
     const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
         defaultValues: {
-            name_of_business: signUpFormValue.name_of_business,
-            address: signUpFormValue.address,
-            tin: signUpFormValue.tin,
-            first_name: signUpFormValue.first_name,
+            name_of_business: '',
+            address: '',
+            tin: '',
+            first_name: '',
             last_name: 'Test',
-            designation: signUpFormValue.designation,
-            telephone_number: signUpFormValue.telephone_number,
-            cell_phone_number: signUpFormValue.cell_phone_number,
-            email_id: signUpFormValue.email_id,
-            password: signUpFormValue.password,
+            designation: '',
+            telephone_number: '',
+            cell_phone_number: '',
+            email_id: '',
+            password: '',
             rePassword: '',
             user_type: 2
         }
@@ -42,26 +42,27 @@ const Signup = () => {
     const password = watch('password');
     const rePassword = watch('rePassword');
 
-    const onsubmit = (data) => {
-        if (password !== rePassword) {
-            // alert("Passwords do not match. Please try again.")
-            setPasswordError(true);
-            return
+    const onsubmit = async (data) => {
+        try{
+            if (password !== rePassword) {
+                // alert("Passwords do not match. Please try again.")
+                setPasswordError(true);
+                return
+            }
+            setPasswordError(false);
+            //removing repassword field and making a new copy without it usingLodash lib
+    
+            const newData = omit(data, 'rePassword');
+            dispatch(signupData(newData)); //Dispatching data to store 
+    
+            fetchAPI(newData)
+
+        }catch(error){
+            console.log(error)
+            const err = new Error("User e-mail already Exist")
+            alert(err)
         }
-        setPasswordError(false);
-        //removing repassword field and making a new copy without it usingLodash lib
-
-        const newData = omit(data, 'rePassword');
-        dispatch(signupData(newData)); //Dispatching data to store 
-
-        resgitserUser(newData)
-        if (error) {
-            alert(errorMessage)
-            setError(false)
-            return
-        }
-
-        // reset()
+        reset()
     }
 
     useEffect(() => {
@@ -70,11 +71,6 @@ const Signup = () => {
             return
         }
     }, [errorMessage, error]);
-
-    function resgitserUser(data) {
-        //calling API with the form field
-        fetchAPI(data);
-    }
 
     const formParentStyling = {
         width: { xs: '98%', lg: '50%' },
