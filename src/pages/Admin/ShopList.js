@@ -25,7 +25,6 @@ const ShopList = ({checkss}) => {
     useEffect(() => {
         fetchAPI();
     }, [fetchAPI])
-
     useEffect(() => {
         if (check !== null) {
             setUserList(check.result.list)
