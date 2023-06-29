@@ -10,12 +10,14 @@ import bgImg from "../../../public/assets/background3.jpg"
 import Navbar from '@/components/Navbar'
 import { useRouter } from 'next/router'
 import { loginState } from '@/features/authSlice'
+ import Footer from '@/components/Footer'
+
 
 
 export const bgImgStyling = {
     background: `url(${bgImg.src})`,
     zIndex: '-1',
-    backgroundSize: 'cover', position: 'absolute', width: '100%', height: '100%'
+    backgroundSize: 'cover', position: 'absolute', width: '100%', 
 }
 
 const baseURl = process.env.NEXT_PUBLIC_API_URL
@@ -90,7 +92,8 @@ const LoginForm = ({ session, status, hello }) => {
         p: { xs: '0.5rem', lg: '2rem' },
         borderRadius: '20px',
         position: 'relative',
-        top: '0',
+        top: {xs:'30px',md:'50',lg:'100px',xl:'120px'},
+        minHeight: 'calc(100vh - 95px)'
     }
     return (
         <>
@@ -106,8 +109,8 @@ const LoginForm = ({ session, status, hello }) => {
                     component='form' onSubmit={handleSubmit(onSubmit)}
                 >
                     <Box sx={{ marginBottom: '2rem' }}>
-                        <Typography variant='h1' sx={{ fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
-                            Get Started Now
+                        <Typography variant='h1' sx={{ fontSize: { xs: '1.5rem', md: '2rem', lg: '2.4rem' }, color: '#2C306F' }}>
+                            Plastic Return Filing System
                         </Typography>
                     </Box>
                     <Controller
@@ -127,14 +130,21 @@ const LoginForm = ({ session, status, hello }) => {
                         />}>
                     </Controller>
                     <Box className="flex justify-center gap-8 ">
-                        <CustomButton type='submit' text='Login In' bgColor='#1f892a' />
+                        <CustomButton type='submit' text='Login' bgColor='#1f892a' />
 
-                        <CustomButton text='Regsister User' bgColor='#1f892a' handleClick={() => router.push('/Signup/Signup')} />
+                        <Box className="flex justify-center gap-8 ">
+                        
+
+                        <CustomButton text='Register' bgColor='#1f892a' handleClick={() => router.push('/Signup/Signup')} />
 
                     </Box>
 
+                    </Box>
+                 
+
                 </Box>
             </Box>
+            <Footer/>
         </>
     )
 }

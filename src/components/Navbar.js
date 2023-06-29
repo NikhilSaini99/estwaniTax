@@ -10,20 +10,33 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLoginState } from "@/features/formSlice";
 import LogoutBtn from "./LogoutBtn";
+import { useRouter } from "next/router";
 
+
+const date = new Date();
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const eligibleMonthText = month[date.getMonth() - 1];
+const eligibleMonthNumber = (date.getMonth() + 1) - 1
+const currentyear = date.getFullYear()
+
+const mydate = { month_text: eligibleMonthText, month_number: eligibleMonthNumber, current_year: currentyear }
 
 
 
 const Navbar = () => {
   const dispatch = useDispatch()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false);
   const [navColor, setNavColor] = useState(false)
   const loginStatus = useSelector((state) => state.loginForm)
+  const rtrFromData = useSelector((state) => state.rtrForm)
   const [intialTry, setInitialtry] = useState(false)
-
+  const validRTRstatus = useSelector((state) => state.validateRTR)
+  console.log(validRTRstatus)
   useEffect(() => {
     // setAdminLoginState(true)
   }, [loginStatus])
+ 
 
   function changeColor() {
     if (window.scrollY > 100) {
@@ -46,6 +59,16 @@ const Navbar = () => {
   function handleHamburger() {
     setIsOpen(!isOpen);
   }
+
+  const navbtnStyle = {
+    color: 'black',
+    '&:hover': {
+      color: 'white'
+    }
+  }
+  //   if (rtrFilledList.find((element) => element.month_number === (currentMont - 1) && element.current_year === currentyear)) {
+  //     console.log("You have already filled plastic levy tax for this month")
+  // }
   return (
     <Paper elevation={20} sx={{ zIndex: '999', position: "relative", top: '0', backgroundColor: 'transparent', }}>
       <Stack
@@ -100,15 +123,28 @@ const Navbar = () => {
 
         <Box fontWeight="bold">
           <ul className={styles.check}>
-            {loginStatus.adminLogin && <><Link href={`/Admin/ShopList`}>Home</Link>
+            {loginStatus.adminLogin && <>
+              <Button sx={{ ...navbtnStyle }} onClick={() => router.push('/Admin/ShopList')}>Home</Button>
+              <Button sx={{ ...navbtnStyle }} onClick={() => router.push('/Admin/Approveduserlist')}>Approved user list</Button>
+              <Button sx={{ ...navbtnStyle }} onClick={() => router.push('/Admin/ShopList')}>Pending User list</Button>
+              <Button sx={{ ...navbtnStyle }} onClick={() => router.push({ pathname: '/Admin/FilledRTRDetails', query: mydate })}>Returns Filed</Button>
+              <Button sx={{ ...navbtnStyle }} onClick={() => { router.push('/Login/LoginForm'); dispatch(updateLoginState({ adminLogin: false, userLogin: false })) }}>Sign Out</Button></>}
 
-              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link></>}
-
-            {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>Add New RTR</Link>
-
-              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link>
-              {/* <LogoutBtn/> */}
-            </>}
+            {loginStatus.userLogin &&
+              <>
+                <Button sx={{ ...navbtnStyle }} onClick={() => router.push(`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`)}>Home</Button>
+                <Button sx={{ ...navbtnStyle }}
+                  onClick={() => {
+                    if (!validRTRstatus) {
+                      alert("Plastic levy for this month is already filled")
+                    }
+                    else {
+                      router.push('/RTR/RTRform');
+                    }
+                  }}>
+                  File Return</Button>
+                <Button sx={{ ...navbtnStyle }} onClick={() => { dispatch(updateLoginState({ adminLogin: false, userLogin: false })); router.push('/Login/LoginForm') }}>Sign Out</Button>
+              </>}
 
 
           </ul>
@@ -146,7 +182,7 @@ const Navbar = () => {
 
                 <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link></>}
 
-              {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>Add New RTR</Link>
+              {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>File Return</Link>
 
                 <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link>
 

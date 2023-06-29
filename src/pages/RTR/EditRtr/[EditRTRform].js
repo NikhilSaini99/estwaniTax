@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm, Controller, useController } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
 import { rtrData } from '@/features/RTRformslice';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 import dayjs from 'dayjs';
 import { Box, Typography, } from '@mui/material';
 import CustomButton from '@/components/Button';
@@ -171,7 +169,7 @@ const EditRTRform = () => {
           <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
             Plastic Levy Return!
           </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Controller
               control={control}
               name="from_date"
@@ -191,7 +189,7 @@ const EditRTRform = () => {
                 {...field} />}
             >
             </Controller>
-          </LocalizationProvider>
+          </LocalizationProvider> */}
 
           <Controller
             control={control}

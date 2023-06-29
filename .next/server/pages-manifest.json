@@ -2,5 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/Login/LoginForm": "pages/Login/LoginForm.js"
+  "/RTR/UserRTRlist": "pages/RTR/UserRTRlist.js",
+  "/RTR/RTRform": "pages/RTR/RTRform.js"
 }

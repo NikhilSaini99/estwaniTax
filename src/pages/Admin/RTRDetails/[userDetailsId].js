@@ -1,15 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, useWatch } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { Box, Table, TableBody, Dialog, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Slide, Button, Stack, InputLabel } from '@mui/material';
 import Navbar from '@/components/Navbar';
 import CustomTextField from '@/components/CustomTextField';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import CustomButton from '@/components/Button';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useFetch } from '@/constants/useFetch';
+import Footer from '@/components/Footer';
+import useLoginCheck from '@/hooks/useLoginCheck';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -17,6 +17,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const UserDetails = () => {
+
     const RTRformData = useSelector((state) => state.rtrForm);
     const loggedinState = useSelector((state) => state.loginForm)
     const { data: formdata, fetchAPI } = useFetch('put', `/rtr/update_rtr_status/${RTRformData.rtr_id}`)
@@ -25,14 +26,17 @@ const UserDetails = () => {
     const router = useRouter()
     const userDetails = router.query;
     const formRef = useRef(null);
+    const { loginCheck } = useLoginCheck()
 
-
+    useEffect(() => {
+        loginCheck()
+    }, [])
     const { handleSubmit, control, watch, formState: { errors } } = useForm({
 
         defaultValues: {
             dateFrom: dayjs(RTRformData.from_date),
             dateTo: dayjs(RTRformData.to),
-            companyName: RTRformData.name_of_business,
+            companyName: RTRformData.company_name,
             tin: RTRformData.tin,
             email: RTRformData.email_id,
             cellPhone: RTRformData.cell_phone_number,
@@ -44,15 +48,18 @@ const UserDetails = () => {
         }
     })
 
+
     const onsubmit = async (data) => {
-        console.log('hello')
+        console.log('inside on')
+        console.log(data.admin_comments)
         fetchAPI({
             email_id: RTRformData.email_id, admin_comments: data.admin_comments,
             approval_status: 2
         })
+
         setOpenAccept(false);
         setOpenReject(false);
-        router.push('/Admin/ShopList')
+        router.push('/Admin/FilledRTRDetails')
     }
 
     const onsubmit2 = async (data) => {
@@ -63,9 +70,9 @@ const UserDetails = () => {
         })
         setOpenAccept(false);
         setOpenReject(false);
-        router.push('/Admin/ShopList')
+        router.push('/Admin/FilledRTRDetails')
     }
-   
+
 
     const formParentStyling = {
         width: { xs: '98%', md: '98%', lg: '98%' },
@@ -94,6 +101,7 @@ const UserDetails = () => {
     };
 
     const sendCommentandClose = () => {
+        console.log('cancel')
         setOpenAccept(false);
     };
     const sendCommentandClose2 = () => {
@@ -108,32 +116,13 @@ const UserDetails = () => {
             <Navbar />
             <Box sx={{ ...formParentStyling }}>
                 <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl mt-24'
-                    onSubmit={handleSubmit(onsubmit)}>
+                // onSubmit={handleSubmit(onsubmit)}
+                >
                     <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
-                        Plastic Levy Return!
+                        Plastic Return Filing - {RTRformData.month_text}{" "}{RTRformData.current_year}
                     </Typography>
-                    <Typography className='col-span-full' variant='h1' sx={{ fontSize: { lg: '2rem' }, fontWeight: 'inherit', color: '#268121', fontWeight: '600' }}>
-                        {RTRformData.month_text} RTR </Typography>
 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Controller
-                            control={control}
-                            name="dateFrom"
-                            rules={{ required: 'Date is required' }}
-                            render={({ field }) => <DatePicker disabled={true} label="From" slotProps={{ textField: { variant: 'outlined', disabled: true } }}
-                                {...field} />}
-                        >
-                        </Controller>
 
-                        <Controller
-                            control={control}
-                            name="dateTo"
-                            rules={{ required: 'Date is required' }}
-                            render={({ field }) => <DatePicker disabled={true} label="To" slotProps={{ textField: { variant: 'outlined', disabled: true } }}
-                                {...field} />}
-                        >
-                        </Controller>
-                    </LocalizationProvider>
 
                     <Controller
                         control={control}
@@ -160,7 +149,7 @@ const UserDetails = () => {
                         name="email"
                         rules={{ required: 'Email Address is required' }}
                         render={({ field }) => <CustomTextField field={field} inputType='email'
-                            fieldLabel='Enter Email' errorDetail='email' errors={errors} disabled={true}
+                            fieldLabel='Email ID' errorDetail='email' errors={errors} disabled={true}
                             inputpropStyling={disabledTextFieldStyling}
                         />}
                     />
@@ -293,13 +282,19 @@ const UserDetails = () => {
                         />}
                     />
 
+                    <Box className="flex col-span-full w-full justify-center flex-col">
+                        <Typography variant='body1' sx={{ fontSize: { xs: '1rem', md: '1.2rem', lg: '1.5rem' } }}>Admin Comments</Typography>
+                        <TextField multiline={true} rows={4} defaultValue={RTRformData.admin_comments} inputProps={disabledTextFieldStyling} disabled />
+                    </Box>
 
-                    {loggedinState.adminLogin && <Box className="col-span-full gap-4 flex justify-center"  >
+
+
+                    {loggedinState.adminLogin ? RTRformData.approval_status === 1 ? <Box className="col-span-full gap-4 flex justify-center"  >
                         <CustomButton text='Accept' bgColor='green' handleClick={handleClickOpenAccept}
                         />
                         <CustomButton text='Reject' bgColor='red' handleClick={handleClickOpenReject}
                         />
-                    </Box>}
+                    </Box> : null : null}
 
                     <Dialog
                         open={openAccept}
@@ -308,7 +303,7 @@ const UserDetails = () => {
                         onClose={sendCommentandClose}
                         aria-describedby="alert-dialog-slide-description"
                     >
-                        <Typography variant='h4' sx={{ fontSize: '1.2rem', background: '#1F892A', p: '2rem', color: 'white', textAlign: 'center' }}>Are you Sure you want to Accept the form?</Typography>
+                        <Typography variant='h4' sx={{ fontSize: '1.2rem', background: '#1F892A', p: '2rem', color: 'white', textAlign: 'center' }}>Are you sure you want to accept this return?</Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', width: '550px', p: '2rem', gap: '2rem', alignItems: 'center' }}>
 
                             <Controller control={control}
@@ -318,7 +313,7 @@ const UserDetails = () => {
 
                             <Stack spacing={2} direction='row' justifyContent='flex-end'>
                                 <Button onClick={sendCommentandClose} type="submit" variant='contained' sx={btnsStyling}>Cancel</Button>
-                                <Button onClick={handleSubmit(onsubmit)} type="submit" variant='contained' sx={btnsStyling}>Add Comment</Button>
+                                <Button onClick={handleSubmit(onsubmit)} type="submit" variant='contained' sx={btnsStyling}>Approve</Button>
                             </Stack>
                         </Box>
 
@@ -331,7 +326,7 @@ const UserDetails = () => {
                         aria-describedby="alert-dialog-slide-description"
 
                     >
-                        <Typography variant='h4' sx={{ fontSize: '1.2rem', background: '#ff0000', p: '2rem', color: 'white', textAlign: 'center' }}>Are you Sure you want to Reject the form?</Typography>
+                        <Typography variant='h4' sx={{ fontSize: '1.2rem', background: '#ff0000', p: '2rem', color: 'white', textAlign: 'center' }}>Are you sure you want to reject this return?</Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', width: '550px', p: '2rem', gap: '2rem', alignItems: 'center' }}>
                             <Controller control={control}
                                 name="admin_comments"
@@ -339,7 +334,7 @@ const UserDetails = () => {
                             </Controller>
                             <Stack spacing={2} direction='row' justifyContent='flex-end'>
                                 <Button onClick={sendCommentandClose2} type="submit" variant='contained' sx={{ ...btnsStyling, background: '#ff0000' }}>Cancel</Button>
-                                <Button onClick={handleSubmit(onsubmit2)} type="submit" variant='contained' sx={{ ...btnsStyling, background: '#ff0000' }}>Add Comment</Button>
+                                <Button onClick={handleSubmit(onsubmit2)} type="submit" variant='contained' sx={{ ...btnsStyling, background: '#ff0000' }}>Reject</Button>
                             </Stack>
                         </Box>
 
@@ -347,7 +342,7 @@ const UserDetails = () => {
                 </Box>
             </Box>
 
-
+            <Footer />
 
         </>
     )

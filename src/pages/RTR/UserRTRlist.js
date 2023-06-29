@@ -1,57 +1,60 @@
 import React, { useEffect, useState } from 'react'
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import { useFetch } from '@/constants/useFetch';
-import CustomButton from '@/components/Button';
 import Navbar from '@/components/Navbar';
-import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { existingData } from '@/features/RTRformslice';
 import { useSession } from 'next-auth/react';
-import { decryptParams } from '@/utils/encryption';
-
+import Footer from '@/components/Footer';
+import useLoginCheck from '@/hooks/useLoginCheck';
+import { validateRTR } from '@/features/filledRtrCheckSlice';
+const date = new Date();
+const currentMont = date.getMonth() + 1;
+const currentyear = date.getFullYear();
 
 const ShopList = () => {
     const { data: session, status } = useSession()
-    // console.log(session,status)
     const router = useRouter()
-    // const decryptedParams = decryptParams(Number(router.query.user_id))
     const user_id = Number(router.query.user_id)
-
-
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [rtrFilledList, setRTRFilledList] = useState([])
     const dispatch = useDispatch()
     const loginStatus = useSelector((state) => state.loginForm)
     const { data: check, fetchAPI } = useFetch('get', `/rtr/list/${loginStatus?.loginuserData?.user_id}`);
     const [adminLoginState, setAdminLoginState] = useState(false)
-    console.log(router.query.user_id)
+    const { loginCheck } = useLoginCheck();
+
     useEffect(() => {
+        // userLoginCheck()
+        loginCheck()
         fetchAPI();
-    }, [fetchAPI])
+    }, [fetchAPI, loginStatus])
 
     useEffect(() => {
         if (check !== null) {
             setRTRFilledList(check.result.list)
+            // dispatch(existingData(check.result.list))
+            if (rtrFilledList.length > 0) {
+                if (rtrFilledList.find((element) => element.month_number === (currentMont - 1) && element.current_year === currentyear)) {
+                    dispatch(validateRTR(false))
+                }
+                else {
+                    dispatch(validateRTR(true))
+                }
+            }
+            else {
+                dispatch(validateRTR(true))
+            }
+
+            
         }
     }, [fetchAPI, check, dispatch])
 
-    // useFetch(() => {
-    //     setAdminLoginState(true)
-    // }, [loginStatus])
+   
 
-    console.log(loginStatus.userLogin, loginStatus?.loginuserData)
+    // console.log(rtrFilledList)
 
-      //checking if user logged in or not if not redirected to login page
-    // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
-    //    useEffect(() => {
-    //     if (!loginStatus.adminLogin || !loginStatus.useruserLogin) {
-    //         router.push('/Login/LoginForm')
-    //     }
-    // }, [loginStatus, router])
 
 
 
@@ -59,18 +62,19 @@ const ShopList = () => {
         <>
 
             <Navbar />
-            <Paper elevation={20} sx={{ width: '98%', mx: 'auto', my: '5rem', overflowX: 'auto' }}>
+            <Paper elevation={20} sx={{ width: '98%', mx: 'auto', my: '5rem', overflowX: 'auto', minHeight: 'calc(100vh - 120px)' }}>
                 <Stack spacing={4} direction='column'>
                     <Typography variant='h1' sx={{ width: '95%', margin: '2.55rem auto', fontSize: '3rem', color: '#2C306F', }}>
-                        Filled RTR List</Typography>
-                    <TableContainer>
+                        Previous Plastic Returns</Typography>
+                    {rtrFilledList.length>0&&
+                        <TableContainer>
                         <Table sx={{ width: '95%', margin: '0 auto' }}>
                             <TableHead sx={{ ' & th': { px: '5px' } }}>
                                 <TableRow sx={{ '&>*': { textAlign: 'center' } }}>
                                     <TableCell >Company Name</TableCell>
-                                    <TableCell>Tin</TableCell>
+                                    <TableCell>TIN</TableCell>
                                     <TableCell>Designation</TableCell>
-                                    <TableCell>Email Id</TableCell>
+                                    <TableCell>Email ID</TableCell>
                                     <TableCell>Total Levy Payable</TableCell>
                                     <TableCell>Status</TableCell>
                                     <TableCell>Approvers Comment</TableCell>
@@ -85,7 +89,7 @@ const ShopList = () => {
                                         <TableCell>{item.tin}</TableCell>
                                         <TableCell>{item.designation}</TableCell>
                                         <TableCell>{item.email_id}</TableCell>
-                                        <TableCell>{item.total_levy_payable}</TableCell>
+                                        <TableCell>{item.total_levy_payable.toFixed(2)}</TableCell>
                                         <TableCell> {item.approval_status === 1
                                             ? "Pending"
                                             : item.approval_status === 2
@@ -108,8 +112,12 @@ const ShopList = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    } 
+                    <Typography variant='h1' sx={{ width: '95%', margin: '2.55rem auto', fontSize: '3rem', color: '#2C306F', textAlign:'center'}}>
+                        No plastic return filled as of now.</Typography>
                 </Stack>
             </Paper>
+            <Footer />
         </>
     )
 }

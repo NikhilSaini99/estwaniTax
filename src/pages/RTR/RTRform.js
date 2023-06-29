@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useForm, Controller, useController } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
 import { rtrData } from '@/features/RTRformslice';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { Box, Typography, } from '@mui/material';
 import CustomButton from '@/components/Button';
@@ -13,6 +13,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextF
 import Navbar from '@/components/Navbar';
 import { useFetch } from '@/constants/useFetch';
 import { useRouter } from 'next/router';
+import Footer from '@/components/Footer';
+import useLoginCheck from '@/hooks/useLoginCheck';
 
 
 const date = new Date();
@@ -20,9 +22,11 @@ const month = ["January", "February", "March", "April", "May", "June", "July", "
 const eligibleMonthText = month[date.getMonth() - 1];
 const eligibleMonthNumber = (date.getMonth() + 1) - 1
 const currentyear = date.getFullYear()
-const RTRform = () => {
 
+const RTRform = () => {
+  const {loginCheck} = useLoginCheck();
   const router = useRouter()
+
 
   console.log(router)
   const { data: rtrFormData, fetchAPI } = useFetch('post', '/rtr/create')
@@ -37,10 +41,10 @@ const RTRform = () => {
   })
 
   useEffect(() => {
-    //
+    loginCheck()
   }, [loggedInuserData])
 
-  console.log(loggedInuserData)
+  // console.log(loggedInuserData)
 
   const { handleSubmit, reset, setValue, control, watch, formState: { errors } } = useForm({
     defaultValues: {
@@ -65,7 +69,7 @@ const RTRform = () => {
       mmp_opening_stock: 0,
       mmp_purchases: 0,
       mmp_sales: 0,
-      mmp_rate: 0.30,
+      mmp_rate: 0.20,
       mmp_levy: 0,
       mmp_closing_stock: 0,
       refuse_bags_opening_stock: 0,
@@ -89,9 +93,9 @@ const RTRform = () => {
     // Get form data
 
     // Calculate Levy (E) and Closing Stock for each product
-    const pmpLevy = +data.pmp_sales * +data.pmp_rate;
-    const mmpLevy = +data.mmp_sales * +data.mmp_rate;
-    const refuseBagsLevy = +data.refuse_bags_sales * +data.refuse_bags_rate;
+    const pmpLevy = (+data.pmp_sales * +data.pmp_rate).toFixed(2);
+    const mmpLevy = (+data.mmp_sales * +data.mmp_rate).toFixed(2);
+    const refuseBagsLevy = (+data.refuse_bags_sales * +data.refuse_bags_rate).toFixed(2);
 
     const pmpClosingStock = Number(+data.pmp_opening_stock + +data.pmp_purchases) - data.pmp_sales
 
@@ -108,7 +112,8 @@ const RTRform = () => {
     setValue('refuse_bags_closing_stock', refuseBagsClosingStock);
 
     // Calculate and set the Total Levy Payable
-    const totalLevyPayable = pmpLevy + mmpLevy + refuseBagsLevy;
+    const totalLevyPayable = (+pmpLevy + +mmpLevy + +refuseBagsLevy).toFixed(2);
+    console.log('insdie ',totalLevyPayable)
     setValue('total_levy_payable', totalLevyPayable)
 
   };
@@ -135,7 +140,7 @@ const RTRform = () => {
     })
     reset();
     setTotalLevyPayable(0)
-    alert("Form Submitted successfully")
+    alert("Plastic Return Submitted Successfully")
     router.push({
       pathname: '/RTR/UserRTRlist',
       query: { user_id: loggedInuserData?.loginuserData?.user_id }
@@ -184,12 +189,12 @@ const RTRform = () => {
         <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl my-12'
           onSubmit={handleSubmit(onsubmit)}>
           <Typography className='col-span-full' variant='h1' sx={{ ...headingStyling }}>
-            Fill RTR Form
+            Plastic Return Filing - {month[date.getMonth() - 1]}{" "}{currentyear}
           </Typography>
 
-          <Typography className='col-span-full' variant='h1' sx={{ ...headingStyling, fontSize: { lg: '2rem' }, fontWeight: 'inherit' }}>
-            You are eligible to fill RTR for the month of <Typography variant='body1' sx={{ ...headingStyling, display: 'inline', color: '#268121', fontWeight: '600' }}>{month[date.getMonth() - 1]}!</Typography>
-          </Typography>
+          {/* <Typography className='col-span-full' variant='h1' sx={{ ...headingStyling, fontSize: { lg: '2rem' }, fontWeight: 'inherit' }}>
+            You are eligible to fill plastic return filing for the month of <Typography variant='body1' sx={{ ...headingStyling, display: 'inline', color: '#268121', fontWeight: '600' }}></Typography>
+          </Typography> */}
 
           {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Controller
@@ -241,7 +246,7 @@ const RTRform = () => {
             name="email_id"
             rules={{ required: 'Email Address is required' }}
             render={({ field }) => <CustomTextField field={field} inputType='email' disabled={true} inputpropStyling={disabledTextFieldStyling}
-              fieldLabel='Enter Email' errorDetail='email' errors={errors}
+              fieldLabel='Email ID' errorDetail='email' errors={errors}
             />}
           />
 
@@ -513,7 +518,7 @@ const RTRform = () => {
       </Box>
 
 
-
+              <Footer/>
 
     </>
   )

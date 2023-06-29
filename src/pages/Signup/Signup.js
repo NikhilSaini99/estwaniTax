@@ -11,6 +11,8 @@ import Navbar from '@/components/Navbar'
 import { useFetch } from '@/constants/useFetch'
 import omit from 'lodash/omit';
 import { useRouter } from 'next/router'
+import Footer from '@/components/Footer'
+import MathCaptcha from '@/components/MatchCaptcha'
 
 
 
@@ -18,6 +20,7 @@ import { useRouter } from 'next/router'
 
 const Signup = () => {
     const router = useRouter()
+   
     const [passwordError, setPasswordError] = useState(false);
     const { data: registerData, error, errorMessage, fetchAPI } = useFetch('post', '/user/ragister')
 
@@ -46,8 +49,9 @@ const Signup = () => {
     const rePassword = watch('rePassword');
 
     const onsubmit = async (data) => {
+       
         console.log({ ...data, approval_status: 1 })
-        try{
+        try {
             if (password !== rePassword) {
                 setPasswordError(true);
                 return
@@ -56,16 +60,16 @@ const Signup = () => {
 
             //removing repassword field in my obj while sending data to redux state and making a new copy without it usingLodash lib
             const newData = omit(data, 'rePassword');
-            dispatch(signupData({...newData,approval_status: 1})); //Dispatching data to store 
+            dispatch(signupData({ ...newData, approval_status: 1 })); //Dispatching data to store 
 
-            fetchAPI({...newData,approval_status: 1})
+            fetchAPI({ ...newData, approval_status: 1 })
 
-        }catch(error){
+        } catch (error) {
             console.log(error)
             const err = new Error("User e-mail already Exist")
             alert(err)
         }
-        alert("Your Account details sends successfully for approval")
+        alert("Your Registration request has been submitted. You will receive an email notification once your request is approved by system admin")
         router.push('/Login/LoginForm')
         reset()
     }
@@ -78,13 +82,15 @@ const Signup = () => {
     }, [errorMessage, error]);
 
     const formParentStyling = {
-        width: { xs: '98%', lg: '50%' },
+        width: { xs: '98%', lg: '80%' },
         margin: '0 auto',
         p: { xs: '0.5rem', lg: '2rem' },
         borderRadius: '20px',
         position: 'relative',
-        top: '0',
-        minHeight: { xs: '100vh', lg: '800px' }
+        top: '100px',
+        minHeight: 'calc(95vh - 95px)',
+        marginBottom:'10rem'
+        // minHeight: { xs: '100vh', md:'800px', lg: '800px'  }
     }
     return (
         <>
@@ -95,10 +101,8 @@ const Signup = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
             <Navbar />
-            {/* <Box sx={{ ...bgImgStyling }}>
-            </Box> */}
-
-            <Box sx={{ ...formParentStyling }}>
+            
+            <Box sx={formParentStyling}>
                 <Box className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full md:p-32 lg:p-24'
                     component='form' onSubmit={handleSubmit(onsubmit)}>
                     <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
@@ -110,7 +114,7 @@ const Signup = () => {
                         rules={{ required: 'BusinessName is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter BusinessName' field={field} errorDetail='name_of_business'
+                                inputType='text' fieldLabel='Enter Business Name' field={field} errorDetail='name_of_business'
                                 errors={errors}
                             />}
                     >
@@ -129,10 +133,14 @@ const Signup = () => {
                     <Controller
                         control={control}
                         name='tin'
-                        rules={{ required: 'Tin is required' }}
+                        rules={{
+                            required: 'TIN is required',
+                            minLength: { value: 9, message: 'TIN must be at least 9 digits long' },
+                            maxLength: { value: 9, message: 'TIN must be at most 9 digits long' }
+                        }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Tin' field={field} errorDetail='tin'
+                                inputType='number' fieldLabel='Enter TIN' field={field} errorDetail='tin'
                                 errors={errors}
                             />}
                     >
@@ -143,7 +151,7 @@ const Signup = () => {
                         rules={{ required: 'PrimaryContact is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='text' fieldLabel='Enter Full Name' field={field} errorDetail='first_name'
+                                inputType='text' fieldLabel='Name of Primary Contact Person' field={field} errorDetail='first_name'
                                 errors={errors}
                             />}
                     >
@@ -176,7 +184,7 @@ const Signup = () => {
                         rules={{ required: 'CellNo is required' }}
                         render={({ field }) =>
                             <CustomTextField
-                                inputType='number' fieldLabel='Enter Celephone Number' field={field} errorDetail='cell_phone_number'
+                                inputType='number' fieldLabel='Enter Cellphone Number' field={field} errorDetail='cell_phone_number'
                                 errors={errors}
                             />}
                     >
@@ -212,7 +220,7 @@ const Signup = () => {
                             <>
                                 <CustomTextField
                                     name="repassword"
-                                    inputType='password' fieldLabel='Re-Type-Password' field={field} errorDetail='rePassword'
+                                    inputType='password' fieldLabel='Re-type Password' field={field} errorDetail='rePassword'
                                     errors={errors}
                                 />
                                 {passwordError && <label style={{ color: 'red' }}
@@ -223,10 +231,16 @@ const Signup = () => {
                     >
                     </Controller>
                     <Box className="col-span-full flex justify-center mt-6">
-                        <CustomButton type='submit' text='Register' bgColor='#2C306F' />
+                    <MathCaptcha onSubmit={handleSubmit(onsubmit)} />
                     </Box>
+                    {/* <Box className="col-span-full flex justify-center mt-6">
+                        <CustomButton type='submit' text='Submit' bgColor='#2C306F' btnDisable={!isFormSubmitted}/>
+                    </Box> */}
                 </Box>
             </Box>
+          
+           
+            <Footer />
         </>
 
     )

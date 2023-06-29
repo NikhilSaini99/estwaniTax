@@ -3,6 +3,7 @@ import loginReducer from "@/features/formSlice"
 import SignupReducer from "@/features/SignupSlice"
 import RTRReducer from "@/features/RTRformslice"
 import loggedInReducer from "@/features/authSlice"
+import validateRTRReducer from "@/features/filledRtrCheckSlice"
 // import storage from 'redux-persist/lib/storage';
 import createWebStorage from "redux-persist/lib/storage/createWebStorage"
 import thunk from "redux-thunk";
@@ -46,7 +47,8 @@ const reducer = combineReducers({
   loginForm: loginReducer,
   SignupForm: SignupReducer,
   rtrForm: RTRReducer,
-  auth:loggedInReducer
+  auth:loggedInReducer,
+  validateRTR:validateRTRReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)

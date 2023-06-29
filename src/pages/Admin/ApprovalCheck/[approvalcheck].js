@@ -9,6 +9,8 @@ import Navbar from '@/components/Navbar'
 import { useFetch } from '@/constants/useFetch'
 import { useRouter } from 'next/router'
 import fetching from '@/constants/fetching'
+import Footer from '@/components/Footer'
+import useLoginCheck from '@/hooks/useLoginCheck'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -19,10 +21,13 @@ const Approvalcheck = () => {
 
     const router = useRouter();
     const { query: { approvalcheck: userId } = userId } = router
+    const { query } = router
     const [useFormData, setUserFormData] = useState({})
-
+    console.log('inside status', query.check)
     const { data: registerData, error, errorMessage, fetchAPI } = useFetch('get', `/user/single_user_details/${userId}`)
     const dispatch = useDispatch()
+    const { loginCheck } = useLoginCheck()
+    
 
     const { control, handleSubmit, watch, reset, formState: { errors } } = useForm({
         defaultValues: useFormData || {
@@ -57,6 +62,7 @@ const Approvalcheck = () => {
     // calling useFetch manually
 
     useEffect(() => {
+        loginCheck()
         fetchAPI(); // Trigger the API request when the component mounts
     }, [fetchAPI]);
 
@@ -64,15 +70,16 @@ const Approvalcheck = () => {
         if (registerData !== null) {
             setUserFormData(registerData.result.list)
             reset(registerData.result.list)
+
         }
     }, [registerData, dispatch, reset])
 
-   
+
 
     const onsubmit = async () => {
         console.log("checking")
         try {
-            await fetching('put', `/admin/user_aprovel/${userId}`, { approval_status: 2 })
+            await fetching('put', `/admin/user_aprovel/${userId}`, { approval_status: 2, email_id: useFormData.email_id })
         } catch (error) {
 
         }
@@ -81,7 +88,7 @@ const Approvalcheck = () => {
     const onsubmit2 = async () => {
         console.log("checking2")
         try {
-            await fetching('put', `/admin/user_aprovel/${userId}`, { approval_status: 3 })
+            await fetching('put', `/admin/user_aprovel/${userId}`, { approval_status: 3, email_id: useFormData.email_id })
         } catch (error) {
         }
         router.push('/Admin/ShopList')
@@ -89,7 +96,7 @@ const Approvalcheck = () => {
 
 
     const formParentStyling = {
-        width: { xs: '98%', lg: '50%' },
+        width: { xs: '98%', lg: '80%' },
         margin: '0 auto',
         p: { xs: '0.5rem', lg: '2rem' },
         borderRadius: '20px',
@@ -100,9 +107,9 @@ const Approvalcheck = () => {
 
     if (!registerData) {
         // Render a loading spinner or placeholder until the data is fetched
-        return <CircularProgress />;
+        return <CircularProgress sx={{ width: '100%', height: '100%', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'transparent' }} />;
     }
-
+    // console.log(checkState)
     return (
         <>
             <Head>
@@ -119,7 +126,7 @@ const Approvalcheck = () => {
                 <Box className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full sm:w-3/4 lg:w-full md:p-32 lg:p-24'
                     component='form' onSubmit={handleSubmit(onsubmit)}>
                     <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
-                        Registered User Details
+                        User Registration Details
                     </Typography>
                     <Controller
                         control={control}
@@ -128,7 +135,7 @@ const Approvalcheck = () => {
                         render={({ field }) =>
                             <CustomTextField
                                 variant="standard"
-                                inputType='text' fieldLabel='BusinessName' field={field} errorDetail='name_of_business' disabled={true}
+                                inputType='text' fieldLabel='Business Name' field={field} errorDetail='name_of_business' disabled={true}
                                 errors={errors}
                             />}
                     />
@@ -141,7 +148,7 @@ const Approvalcheck = () => {
                         render={({ field }) =>
                             <CustomTextField
                                 variant="standard"
-                                inputType='text' fieldLabel='Enter Address' field={field} errorDetail='address' disabled={true}
+                                inputType='text' fieldLabel='Address' field={field} errorDetail='address' disabled={true}
                                 errors={errors}
                             />}
                     >
@@ -153,7 +160,7 @@ const Approvalcheck = () => {
                         render={({ field }) =>
                             <CustomTextField
                                 variant="standard"
-                                inputType='text' fieldLabel='Tin' field={field} errorDetail='tin' disabled={true}
+                                inputType='text' fieldLabel='TIN' field={field} errorDetail='tin' disabled={true}
                                 errors={errors}
                             />}
                     >
@@ -165,7 +172,7 @@ const Approvalcheck = () => {
                         render={({ field }) =>
                             <CustomTextField
                                 variant="standard"
-                                inputType='text' fieldLabel='Full Name' field={field} errorDetail='first_name' disabled={true} helperText="text"
+                                inputType='text' fieldLabel='Name of Primary Contact Person' field={field} errorDetail='first_name' disabled={true} helperText="text"
                                 errors={errors}
                             />}
                     >
@@ -201,7 +208,7 @@ const Approvalcheck = () => {
                         render={({ field }) =>
                             <CustomTextField
                                 variant="standard"
-                                inputType='number' fieldLabel='Celephone Number' field={field} errorDetail='cell_phone_number' disabled={true}
+                                inputType='number' fieldLabel='Cellphone Number' field={field} errorDetail='cell_phone_number' disabled={true}
                                 errors={errors}
                             />}
                     >
@@ -213,12 +220,12 @@ const Approvalcheck = () => {
                         render={({ field }) =>
                             <CustomTextField
                                 variant="standard"
-                                inputType='email' fieldLabel='Email' field={field} errorDetail='email_id' disabled={true}
+                                inputType='email' fieldLabel='Email ID' field={field} errorDetail='email_id' disabled={true}
                                 errors={errors}
                             />}
                     >
                     </Controller>
-                    <Box className="col-span-full flex justify-center mt-6 gap-4">
+                    {query.check === '1' ? <Box className="col-span-full flex justify-center mt-6 gap-4">
                         <CustomButton text='Accept' bgColor='#1F892A' handleClick={handleClickOpen} />
 
                         <CustomButton text='Reject' bgColor='#ff0000' handleClick={handleClickOpenReject} />
@@ -230,7 +237,7 @@ const Approvalcheck = () => {
                             onClose={handleClose}
                             aria-describedby="alert-dialog-slide-description"
                         >
-                            <DialogTitle>{"Are you sure you want to accept the user?"}</DialogTitle>
+                            <DialogTitle>{"Are you sure you want to accept this user request?"}</DialogTitle>
 
                             <DialogActions>
                                 <Button type="submit" onClick={handleClose}>Cancel</Button>
@@ -245,7 +252,7 @@ const Approvalcheck = () => {
                             onClose={handleClose2}
                             aria-describedby="alert-dialog-slide-description"
                         >
-                            <DialogTitle>{"Are you sure you want to Reject the user?"}</DialogTitle>
+                            <DialogTitle>{"Are you sure you want to reject this user request?"}</DialogTitle>
 
                             <DialogActions>
                                 <Button type="submit" onClick={handleClose2}>Cancel</Button>
@@ -254,10 +261,11 @@ const Approvalcheck = () => {
                         </Dialog>
 
 
-                    </Box>
+                    </Box> : null}
 
                 </Box>
             </Box>
+            <Footer />
         </>
 
     )
