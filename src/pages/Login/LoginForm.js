@@ -9,6 +9,8 @@ import Head from 'next/head'
 import bgImg from "../../../public/assets/background3.jpg"
 import Navbar from '@/components/Navbar'
 import { useRouter } from 'next/router'
+import { loginState } from '@/features/authSlice'
+
 
 export const bgImgStyling = {
     background: `url(${bgImg.src})`,
@@ -18,7 +20,7 @@ export const bgImgStyling = {
 
 const baseURl = process.env.NEXT_PUBLIC_API_URL
 
-const LoginForm = ({ session, status,hello }) => {
+const LoginForm = ({ session, status, hello }) => {
 
     console.log(hello)
 
@@ -37,10 +39,10 @@ const LoginForm = ({ session, status,hello }) => {
         })
 
     useEffect(() => {
-        dispatch(updateLoginState({ adminLogin: null, userLogin: null, loginuserData: null }))
+        dispatch(updateLoginState({ adminLogin: false, userLogin: false, loginuserData: null }))
     }, [])
 
-    async function onSubmit(data) {     
+    async function onSubmit(data) {
         try {
             const res = await fetch(`${baseURl}/user/login`, {
                 method: 'POST',
@@ -60,7 +62,13 @@ const LoginForm = ({ session, status,hello }) => {
                 router.push('/Admin/ShopList')
             }
             else if (user.result.list.user_type === 2) {
+                if (user.result.list.approval_status === 1) {
+                    alert("Your Account approval is pending");
+                    return;
+                }
+
                 dispatch(updateLoginState({ adminLogin: false, userLogin: true, loginuserData: userDetailObj }))
+                // dispatch(loginState(true))
                 router.push({
                     pathname: '/RTR/UserRTRlist',
                     query: { user_id: user.result.list.user_id },
@@ -76,7 +84,7 @@ const LoginForm = ({ session, status,hello }) => {
         }
 
     }
-       const formParentStyling = {
+    const formParentStyling = {
         width: { xs: '98%', lg: '40%' },
         margin: '0 auto',
         p: { xs: '0.5rem', lg: '2rem' },
@@ -118,9 +126,13 @@ const LoginForm = ({ session, status,hello }) => {
                             fieldLabel='Enter Password' errorDetail='password' errors={errors}
                         />}>
                     </Controller>
-                    <Box className="flex justify-center">
+                    <Box className="flex justify-center gap-8 ">
                         <CustomButton type='submit' text='Login In' bgColor='#1f892a' />
+
+                        <CustomButton text='Regsister User' bgColor='#1f892a' handleClick={() => router.push('/Signup/Signup')} />
+
                     </Box>
+
                 </Box>
             </Box>
         </>
@@ -130,8 +142,8 @@ const LoginForm = ({ session, status,hello }) => {
 export default LoginForm
 
 
-export async function getServerSideProps({context}){
+export async function getServerSideProps({ context }) {
 
     const hello = "hello"
-    return {props:{hello}}
+    return { props: { hello } }
 }

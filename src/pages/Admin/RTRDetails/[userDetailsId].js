@@ -32,7 +32,7 @@ const UserDetails = () => {
         defaultValues: {
             dateFrom: dayjs(RTRformData.from_date),
             dateTo: dayjs(RTRformData.to),
-            companyName: RTRformData.company_name,
+            companyName: RTRformData.name_of_business,
             tin: RTRformData.tin,
             email: RTRformData.email_id,
             cellPhone: RTRformData.cell_phone_number,
@@ -65,7 +65,7 @@ const UserDetails = () => {
         setOpenReject(false);
         router.push('/Admin/ShopList')
     }
-    console.log(RTRformData)
+   
 
     const formParentStyling = {
         width: { xs: '98%', md: '98%', lg: '98%' },
@@ -112,8 +112,9 @@ const UserDetails = () => {
                     <Typography className='col-span-full' variant='h1' sx={{ marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' }}>
                         Plastic Levy Return!
                     </Typography>
-                    <Typography className='col-span-full' variant='h2' sx={{ fontSize: { lg: '2rem' }, fontWeight: 'inherit' }}>
-                        {RTRformData.month_text} RTR</Typography>
+                    <Typography className='col-span-full' variant='h1' sx={{ fontSize: { lg: '2rem' }, fontWeight: 'inherit', color: '#268121', fontWeight: '600' }}>
+                        {RTRformData.month_text} RTR </Typography>
+
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Controller
                             control={control}

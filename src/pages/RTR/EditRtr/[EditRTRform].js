@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { Box, Typography,} from '@mui/material';
+import { Box, Typography, } from '@mui/material';
 import CustomButton from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
@@ -35,9 +35,6 @@ const EditRTRform = () => {
 
   useEffect(() => {
   }, [loggedInuserData])
-
-  console.log(loggedInuserData)
-  console.log('checking RTR ID ',RTRformData )
 
   const { handleSubmit, reset, setValue, control, watch, formState: { errors } } = useForm({
     defaultValues: {
@@ -153,6 +150,18 @@ const EditRTRform = () => {
     console.log(handleCheck)
   }
 
+
+  //checking if user logged in or not if not redirected to login page
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+  // useEffect(()=>{
+  //   console.log(isLoggedIn)
+  // },[isLoggedIn])
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     router.replace('/Login/LoginForm')
+  //   }
+  // }, [isLoggedIn, router])
+
   return (
     <>
       <Navbar />
@@ -167,7 +176,7 @@ const EditRTRform = () => {
               control={control}
               name="from_date"
               rules={{ required: 'Date is required' }}
-              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined'} }}
+              render={({ field }) => <DatePicker label="From" slotProps={{ textField: { variant: 'outlined' } }}
                 // onChange={(date) => setfromDate(date.toISOString())}
                 {...field} />}
             >
@@ -281,7 +290,7 @@ const EditRTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.35' disabled inputProps={disabledTextFieldStyling}/>
+                      <TextField type="number" value='0.35' disabled inputProps={disabledTextFieldStyling} />
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -289,7 +298,7 @@ const EditRTRform = () => {
                         name="pmp_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -298,7 +307,7 @@ const EditRTRform = () => {
                         control={control}
                         name="pmp_closing_stock"
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
 
@@ -342,7 +351,7 @@ const EditRTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="number" value='0.20' disabled inputProps={disabledTextFieldStyling}/>
+                      <TextField type="number" value='0.20' disabled inputProps={disabledTextFieldStyling} />
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -350,7 +359,7 @@ const EditRTRform = () => {
                         name="mmp_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -360,7 +369,7 @@ const EditRTRform = () => {
                         name="mmp_closing_stock"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -404,7 +413,7 @@ const EditRTRform = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField type="text" value='0.35' disabled inputProps={disabledTextFieldStyling}/>
+                      <TextField type="text" value='0.35' disabled inputProps={disabledTextFieldStyling} />
                     </TableCell>
                     <TableCell>
                       <Controller
@@ -412,7 +421,7 @@ const EditRTRform = () => {
                         name="refuse_bags_levy"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -422,7 +431,7 @@ const EditRTRform = () => {
                         name="refuse_bags_closing_stock"
 
                         render={({ field }) => (
-                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling}/>
+                          <TextField type="number" {...field} disabled={true} inputProps={disabledTextFieldStyling} />
                         )}
                       />
                     </TableCell>
@@ -437,7 +446,7 @@ const EditRTRform = () => {
                   control={control}
                   name="total_levy_payable"
                   render={({ field }) => (
-                    <TextField type="number" {...field} variant='outlined' disabled={true} size='small'  sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
+                    <TextField type="number" {...field} variant='outlined' disabled={true} size='small' sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
                   )}
                 />
               </Box>

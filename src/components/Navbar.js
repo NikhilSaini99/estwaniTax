@@ -9,6 +9,7 @@ import styles from './Navbar.module.css'
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { updateLoginState } from "@/features/formSlice";
+import LogoutBtn from "./LogoutBtn";
 
 
 
@@ -99,13 +100,15 @@ const Navbar = () => {
 
         <Box fontWeight="bold">
           <ul className={styles.check}>
-            {loginStatus.adminLogin && <><Link href={`/Admin/ShopList`}>Home</Link><Link href={'/Signup/Signup'}>Registration Form</Link>
+            {loginStatus.adminLogin && <><Link href={`/Admin/ShopList`}>Home</Link>
 
-              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link></>}
 
             {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>Add New RTR</Link>
 
-              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+              <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link>
+              {/* <LogoutBtn/> */}
+            </>}
 
 
           </ul>
@@ -141,11 +144,13 @@ const Navbar = () => {
             <ul>
               {loginStatus.adminLogin && <><Link href={`/Admin/ShopList`}>Home</Link><Link href={'/Signup/Signup'}>Registration Form</Link>
 
-                <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+                <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link></>}
 
               {loginStatus.userLogin && <><Link href={`/RTR/UserRTRlist?user_id=${loginStatus.loginuserData.user_id}`}>Home</Link> <Link href={'/RTR/RTRform'}>Add New RTR</Link>
 
-                <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: null, userLogin: null }))}>Sign Out</Link></>}
+                <Link href="/Login/LoginForm" onClick={() => dispatch(updateLoginState({ adminLogin: false, userLogin: false }))}>Sign Out</Link>
+
+              </>}
 
             </ul>
 

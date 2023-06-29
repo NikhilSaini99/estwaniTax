@@ -10,11 +10,14 @@ import CustomButton from '@/components/Button'
 import Navbar from '@/components/Navbar'
 import { useFetch } from '@/constants/useFetch'
 import omit from 'lodash/omit';
+import { useRouter } from 'next/router'
+
 
 
 
 
 const Signup = () => {
+    const router = useRouter()
     const [passwordError, setPasswordError] = useState(false);
     const { data: registerData, error, errorMessage, fetchAPI } = useFetch('post', '/user/ragister')
 
@@ -35,7 +38,7 @@ const Signup = () => {
             email_id: '',
             password: '',
             rePassword: '',
-            user_type: 2
+            user_type: 2,
         }
     })
 
@@ -43,25 +46,27 @@ const Signup = () => {
     const rePassword = watch('rePassword');
 
     const onsubmit = async (data) => {
+        console.log({ ...data, approval_status: 1 })
         try{
             if (password !== rePassword) {
-                // alert("Passwords do not match. Please try again.")
                 setPasswordError(true);
                 return
             }
             setPasswordError(false);
-            //removing repassword field and making a new copy without it usingLodash lib
-    
+
+            //removing repassword field in my obj while sending data to redux state and making a new copy without it usingLodash lib
             const newData = omit(data, 'rePassword');
-            dispatch(signupData(newData)); //Dispatching data to store 
-    
-            fetchAPI(newData)
+            dispatch(signupData({...newData,approval_status: 1})); //Dispatching data to store 
+
+            fetchAPI({...newData,approval_status: 1})
 
         }catch(error){
             console.log(error)
             const err = new Error("User e-mail already Exist")
             alert(err)
         }
+        alert("Your Account details sends successfully for approval")
+        router.push('/Login/LoginForm')
         reset()
     }
 
@@ -218,13 +223,13 @@ const Signup = () => {
                     >
                     </Controller>
                     <Box className="col-span-full flex justify-center mt-6">
-                        <CustomButton type='submit' text='Register' bgColor='#2C306F'/>
+                        <CustomButton type='submit' text='Register' bgColor='#2C306F' />
                     </Box>
                 </Box>
             </Box>
         </>
 
     )
-}   
+}
 
 export default Signup

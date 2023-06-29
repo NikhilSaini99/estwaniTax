@@ -2,9 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/Signup/Signup": "pages/Signup/Signup.js",
-  "/api/auth/[...nextauth]": "pages/api/auth/[...nextauth].js",
-  "/Admin/ShopList": "pages/Admin/ShopList.js",
-  "/Login/LoginForm": "pages/Login/LoginForm.js",
-  "/Admin/RTRDetails/[userDetailsId]": "pages/Admin/RTRDetails/[userDetailsId].js"
+  "/Admin/ShopList": "pages/Admin/ShopList.js"
 }

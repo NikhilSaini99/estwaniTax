@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import loginReducer from "@/features/formSlice"
 import SignupReducer from "@/features/SignupSlice"
 import RTRReducer from "@/features/RTRformslice"
+import loggedInReducer from "@/features/authSlice"
 // import storage from 'redux-persist/lib/storage';
 import createWebStorage from "redux-persist/lib/storage/createWebStorage"
 import thunk from "redux-thunk";
@@ -44,7 +45,8 @@ const persistConfig = {
 const reducer = combineReducers({
   loginForm: loginReducer,
   SignupForm: SignupReducer,
-  rtrForm: RTRReducer
+  rtrForm: RTRReducer,
+  auth:loggedInReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)

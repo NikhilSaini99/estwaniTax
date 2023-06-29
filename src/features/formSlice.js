@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState  = {adminLogin:null,userLogin:null,loginuserData:null}
+const initialState  = {adminLogin:false,userLogin:false,loginuserData:null}
 
 const loginformSlice = createSlice({
     name: 'form',
@@ -9,12 +9,12 @@ const loginformSlice = createSlice({
         updateLoginState: (state, action) => {
            return state=action.payload
         },
-        adminLogin:(state,action)=>{
+        logoutUserState:(state,action)=>{
             return state= action.payload
         }
     }
 })
 
-export const { updateLoginState,adminLogin } = loginformSlice.actions
+export const { updateLoginState,logoutUserState } = loginformSlice.actions
 
 export default loginformSlice.reducer

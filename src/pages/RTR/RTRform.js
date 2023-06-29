@@ -17,8 +17,9 @@ import { useRouter } from 'next/router';
 
 const date = new Date();
 const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const eligibleMonthText = month[date.getMonth()-1];
-const eligibleMonthNumber = (date.getMonth()+1)-1
+const eligibleMonthText = month[date.getMonth() - 1];
+const eligibleMonthNumber = (date.getMonth() + 1) - 1
+const currentyear = date.getFullYear()
 const RTRform = () => {
 
   const router = useRouter()
@@ -46,8 +47,6 @@ const RTRform = () => {
       user_id: loggedInuserData?.loginuserData?.user_id,
       from_date: dayjs('2023-06-13'),
       to_date: dayjs('2023-05-13'),
-      month_text: eligibleMonthText,
-      month_number: eligibleMonthNumber,
       company_name: loggedInuserData?.loginuserData?.name_of_business,
       address: '',
       tin: loggedInuserData?.loginuserData?.tin,
@@ -76,7 +75,11 @@ const RTRform = () => {
       refuse_bags_levy: 0,
       refuse_bags_closing_stock: 0,
       total_levy_payable: 0,
-      approval_status: 1
+      approval_status: 1,
+      created_at: date,
+      month_text: eligibleMonthText,
+      month_number: eligibleMonthNumber,
+      current_year: currentyear
 
     }
   })
@@ -115,6 +118,7 @@ const RTRform = () => {
 
   const onsubmit = (data) => {
     const watchedData = watch();
+    console.log('default values', data)
     const from = watchedData.from_date ? watchedData.from_date.toISOString() : null;
     const to = watchedData.to_date ? watchedData.to_date.toISOString() : null;
 
@@ -123,8 +127,12 @@ const RTRform = () => {
       to: to
     });
     console.log(data)
-    dispatch(rtrData({ ...data, dateFrom: from, dateTo: to }));
-    fetchAPI({ ...data, dateFrom: from, dateTo: to })
+    dispatch(rtrData({
+      ...data, from_date: from, to_date: to
+    }));
+    fetchAPI({
+      ...data, from_date: from, to_date: to
+    })
     reset();
     setTotalLevyPayable(0)
     alert("Form Submitted successfully")
@@ -154,12 +162,20 @@ const RTRform = () => {
 
   function handleCheckChange(e) {
     sethandleCheck(!handleCheck);
-    console.log(handleCheck)
   }
 
   const headingStyling = {
-    marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F' 
+    marginBottom: "2rem", fontSize: { xs: '1.5rem', md: '2rem', lg: '3rem' }, color: '#2C306F'
   }
+
+  
+    //checking if user logged in or not if not redirected to login page
+    // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+    // useEffect(() => {
+    //     if (!isLoggedIn) {
+    //         router.replace('/Login/LoginForm')
+    //     }
+    // }, [isLoggedIn, router])
 
   return (
     <>
@@ -167,12 +183,12 @@ const RTRform = () => {
       <Box sx={{ ...formParentStyling }}>
         <Box component='form' className='grid grid-cols-2 gap-4 bg-white shadow-2xl p-4 rounded-xl my-12'
           onSubmit={handleSubmit(onsubmit)}>
-          <Typography className='col-span-full' variant='h1' sx={{...headingStyling}}>
+          <Typography className='col-span-full' variant='h1' sx={{ ...headingStyling }}>
             Fill RTR Form
           </Typography>
 
-          <Typography className='col-span-full' variant='h2' sx={{...headingStyling,fontSize:{lg:'2rem'},fontWeight:'inherit'}}>
-            You are eligible to fill RTR for the month of <Typography variant='h2' sx={{...headingStyling, display:'inline',color:'#268121',fontWeight:'600'}}>{month[date.getMonth()-1]}!</Typography>
+          <Typography className='col-span-full' variant='h1' sx={{ ...headingStyling, fontSize: { lg: '2rem' }, fontWeight: 'inherit' }}>
+            You are eligible to fill RTR for the month of <Typography variant='body1' sx={{ ...headingStyling, display: 'inline', color: '#268121', fontWeight: '600' }}>{month[date.getMonth() - 1]}!</Typography>
           </Typography>
 
           {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -444,13 +460,13 @@ const RTRform = () => {
               </Table>
             </TableContainer>
             <Box className="col-span-full flex flex-col gap-4 justify-center items-center my-6">
-            <Box className="flex justify-center items-center gap-4">
+              <Box className="flex justify-center items-center gap-4">
                 <Typography variant="body1" sx={{ fontWeight: "bold" }} > TOTAL LEVY PAYABLE</Typography>
                 <Controller
                   control={control}
                   name="total_levy_payable"
                   render={({ field }) => (
-                    <TextField type="number" {...field} variant='outlined' disabled={true} size='small'  sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
+                    <TextField type="number" {...field} variant='outlined' disabled={true} size='small' sx={{ width: '20%', textAlign: 'center' }} inputProps={{ ...disabledTextFieldStyling }} />
                   )}
                 />
               </Box>

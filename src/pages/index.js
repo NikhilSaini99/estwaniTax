@@ -1,9 +1,11 @@
-
+import { useEffect } from 'react'
 import { Inter } from 'next/font/google'
 import LoginForm from './Login/LoginForm'
 import ShopList from '@/pages/Admin/ShopList'
 import { useSession, signOut, getSession } from 'next-auth/react'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 export function handleSignOut() {
@@ -11,11 +13,23 @@ export function handleSignOut() {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const dispatch = useDispatch()
+  const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn)
+  const loginStatus = useSelector((state) => state.loginForm)
+  
+ 
+  useEffect(()=>{
+    if(!loginStatus.adminLogin || !loginStatus.useruserLogin){
+      router.replace('/Login/LoginForm')
+    }
+  },[loginStatus,router])
+
   //using this session i can display the userName or email
   const { data: session, status } = useSession()
   console.log(status)
 
-  const LoginForm = dynamic(() => import('@/pages/Login/LoginForm'), { srr: true })
+  const LoginForm = dynamic(() => import('@/pages/Login/LoginForm'), { ssr: true })
   return (
     <>
       {/* {session ? <ShopList /> : <LoginForm session={session} status={status} />} */}

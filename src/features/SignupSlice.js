@@ -11,8 +11,8 @@ const initialState = {
     cell_phone_number: '',
     email_id: '',
     password: '',
-
-    user_type:2
+    user_type:2,
+    approval_status:1
 }
 
 

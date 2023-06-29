@@ -39,11 +39,21 @@ const ShopList = () => {
         }
     }, [fetchAPI, check, dispatch])
 
-    useFetch(() => {
-        setAdminLoginState(true)
-    }, [loginStatus])
+    // useFetch(() => {
+    //     setAdminLoginState(true)
+    // }, [loginStatus])
 
-    console.log(loginStatus.adminLogin)
+    console.log(loginStatus.userLogin, loginStatus?.loginuserData)
+
+      //checking if user logged in or not if not redirected to login page
+    // const isLoggedIn = useSelector((state) => state.auth.isLoggedIn)
+    //    useEffect(() => {
+    //     if (!loginStatus.adminLogin || !loginStatus.useruserLogin) {
+    //         router.push('/Login/LoginForm')
+    //     }
+    // }, [loginStatus, router])
+
+
 
     return (
         <>

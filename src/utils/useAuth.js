@@ -6,7 +6,7 @@ const useAuth = (redirectPath)=>{
     const router = useRouter()
     const useLoginStatus = useSelector((state)=>state.loginForm)
 
-    console.log('inside useAUth',useLoginStatus.userLogin)
+    // console.log('inside useAUth',useLoginStatus.userLogin)
     useEffect(()=>{
         if(useLoginStatus.userLogin){
             router.push(redirectPath)
